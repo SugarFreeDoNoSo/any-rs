@@ -1,0 +1,15 @@
+{
+  "view_id": "sales.orders",
+  "status": "pending",
+  "data": {
+    "orders": []
+  },
+  "draft": {
+    "money_id": "money_001"
+  },
+  "errors": {},
+  "pending_operations": [
+    "op_001"
+  ],
+  "dirty": true
+}

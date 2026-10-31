@@ -1,0 +1,21 @@
+{
+  "scope": {
+    "business_id": "biz_demo",
+    "project_id": "sales",
+    "client_id": "client_acme"
+  },
+  "type": "sales.order",
+  "items": [
+    {
+      "id": "order_001",
+      "total": {
+        "amount": "15990.00",
+        "currency": "CLP"
+      }
+    }
+  ],
+  "source": "authoritative",
+  "freshness": "current",
+  "watermark": "commit_001",
+  "next_cursor": null
+}

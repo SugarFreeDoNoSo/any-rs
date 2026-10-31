@@ -1,0 +1,214 @@
+specification = "0.1.0-draft.1"
+status = "draft"
+
+# agreed: acuerdo del proyecto; proposed: decisión concreta propuesta.
+
+[[requirements]]
+id = "REQ-001"
+status = "agreed"
+area = "eventos"
+text = "Los handlers se coordinan solo mediante mensajes; no invocan otros handlers."
+acceptance = "Observar una acción con dos handlers y verificar publicación y suscripción sin llamada directa."
+
+[[requirements]]
+id = "REQ-002"
+status = "agreed"
+area = "arquitectura"
+text = "El core no depende de proveedor, base de datos, renderer o lenguaje concreto."
+acceptance = "Sustituir un puerto conforme sin cambiar definiciones de dominio."
+
+[[requirements]]
+id = "REQ-003"
+status = "agreed"
+area = "declarativo"
+text = "Configurar el proyecto con TOML y credenciales por referencias de entorno."
+acceptance = "Compilar configuración sin interpolar o exponer secretos."
+
+[[requirements]]
+id = "REQ-004"
+status = "agreed"
+area = "declarativo"
+text = "Definir tipos, eventos y vistas mediante datos; TOON es un codec alternativo."
+acceptance = "Los ejemplos TOML validan; la habilitación de TOON exige versión y fixtures oficiales."
+
+[[requirements]]
+id = "REQ-005"
+status = "proposed"
+area = "aislamiento"
+text = "Todo dato de cliente pertenece a un ámbito negocio/proyecto/cliente explícito."
+acceptance = "Otro cliente no puede leer, consultar, enlazar o suscribirse a sus datos."
+
+[[requirements]]
+id = "REQ-006"
+status = "agreed"
+area = "identidad"
+text = "Distinguir usuarios, clientes, negocios y membresías."
+acceptance = "El mismo usuario puede cambiar de negocio solo con otra membresía válida."
+
+[[requirements]]
+id = "REQ-007"
+status = "proposed"
+area = "autorizacion"
+text = "Usar perfiles, condiciones, denegación por defecto y deny prioritario."
+acceptance = "Una acción permitida por perfil se deniega si una política deny aplica."
+
+[[requirements]]
+id = "REQ-008"
+status = "agreed"
+area = "autorizacion"
+text = "Permitir evolución autorizada de perfiles sin escalada de privilegios."
+acceptance = "Un actor no puede asignar una acción fuera de su frontera de delegación."
+
+[[requirements]]
+id = "REQ-009"
+status = "proposed"
+area = "autorizacion"
+text = "Reevaluar autorización al ejecutar y en cada lectura o suscripción."
+acceptance = "Un comando en espera se rechaza si su iniciador fue revocado antes de la evaluación."
+
+[[requirements]]
+id = "REQ-010"
+status = "agreed"
+area = "motores"
+text = "Declarar capacidades y adaptar roles solo cuando las garantías sean compatibles."
+acceptance = "El planner rechaza un motor durable sin lease ni coordinador para cola."
+
+[[requirements]]
+id = "REQ-011"
+status = "proposed"
+area = "durabilidad"
+text = "Confirmar aceptación solo tras persistir comando, operación e idempotencia."
+acceptance = "Tras 202 y reinicio, la misma operación permanece consultable y procesable."
+
+[[requirements]]
+id = "REQ-012"
+status = "proposed"
+area = "durabilidad"
+text = "Confirmar estado, inbox, outbox y operación en una unidad atómica."
+acceptance = "Caer después del commit y antes del ACK no duplica el cambio de dominio."
+
+[[requirements]]
+id = "REQ-013"
+status = "proposed"
+area = "mensajeria"
+text = "Deduplicar por suscripción y preservar fan-out independiente."
+acceptance = "Dos suscriptores reciben el mismo evento aunque uno ya haya confirmado."
+
+[[requirements]]
+id = "REQ-014"
+status = "proposed"
+area = "concurrencia"
+text = "Validar revisión y fencing al confirmar."
+acceptance = "Dos escrituras sobre una misma revisión no se confirman ambas; worker vencido no escribe."
+
+[[requirements]]
+id = "REQ-015"
+status = "proposed"
+area = "recuperacion"
+text = "Reintentar con presupuesto y usar dead-letter durable sin perder diagnóstico."
+acceptance = "Agotar intentos mueve la entrega a dead-letter y permite redirección auditada."
+
+[[requirements]]
+id = "REQ-016"
+status = "proposed"
+area = "datos"
+text = "VOs inmutables, entidades referenciales y relaciones tipadas con cardinalidad."
+acceptance = "Modificar un VO, enlazar un tipo incorrecto o violar cardinalidad se rechaza."
+
+[[requirements]]
+id = "REQ-017"
+status = "proposed"
+area = "registro"
+text = "Crear un tipo inexistente solo con esquema explícito y permiso."
+acceptance = "Sin schema o permiso no se crea; registry_data_atomic publica tipo y primera instancia juntos."
+
+[[requirements]]
+id = "REQ-018"
+status = "proposed"
+area = "versionado"
+text = "Publicar releases completos y conservar versiones usadas por pendientes."
+acceptance = "Un release con una referencia rota no modifica el registro vigente."
+
+[[requirements]]
+id = "REQ-019"
+status = "proposed"
+area = "api"
+text = "Separar aceptación de resultado mediante operaciones consultables."
+acceptance = "202 puede terminar en rejected; GET operación devuelve 200 con problem."
+
+[[requirements]]
+id = "REQ-020"
+status = "proposed"
+area = "idempotencia"
+text = "Misma clave y solicitud conservan operación; contenido distinto produce conflicto."
+acceptance = "Reintentar antes de expirar no crea otro comando de dominio."
+
+[[requirements]]
+id = "REQ-021"
+status = "proposed"
+area = "lecturas"
+text = "Exponer watermark, lectura mínima y cursores ligados a ámbito y consulta."
+acceptance = "Proyección retrasada no satisface min_commit; cursor de otro cliente falla."
+
+[[requirements]]
+id = "REQ-022"
+status = "agreed"
+area = "frontend"
+text = "Mantener ViewModel editable separado de sesión confiable."
+acceptance = "Editar draft funciona; intentar cambiar el principal o ámbito por patch se rechaza."
+
+[[requirements]]
+id = "REQ-023"
+status = "agreed"
+area = "frontend"
+text = "SDK consumible en frontend y backend sin imponer renderer."
+acceptance = "El build público excluye secretos y drivers; un consumidor headless usa los mismos mensajes."
+
+[[requirements]]
+id = "REQ-024"
+status = "agreed"
+area = "frontend"
+text = "Ofrecer integración opcional HTML/htmx con semántica de operación pendiente."
+acceptance = "El BFF devuelve fragmento HTML, hace polling y detiene polling al terminar."
+
+[[requirements]]
+id = "REQ-025"
+status = "proposed"
+area = "replay"
+text = "Reconstruir proyecciones con inbox y generación independientes, sin efectos externos."
+acceptance = "Replay no dispara cobros ni omite eventos por el inbox de la generación previa."
+
+[[requirements]]
+id = "REQ-026"
+status = "proposed"
+area = "efectos"
+text = "Tratar resultados externos desconocidos con idempotencia o reconciliación."
+acceptance = "Un timeout de un servicio no idempotente no dispara una repetición ciega."
+
+[[requirements]]
+id = "REQ-027"
+status = "proposed"
+area = "limites"
+text = "Limitar tamaño, saltos causales, concurrencia y deadlines por contexto."
+acceptance = "Un ciclo causal alcanza un límite y termina con estado durable observable."
+
+[[requirements]]
+id = "REQ-028"
+status = "proposed"
+area = "observabilidad"
+text = "Correlacionar operaciones y entregas y sanitizar errores y logs."
+acceptance = "Seguir comando a evento por correlación sin registrar credenciales."
+
+[[requirements]]
+id = "REQ-029"
+status = "proposed"
+area = "retencion"
+text = "Retener inbox, registro y operaciones por la ventana de reentrega declarada."
+acceptance = "Un replay usa otra generación y una entrega retenida conserva sus dependencias."
+
+[[requirements]]
+id = "REQ-030"
+status = "proposed"
+area = "normalizacion"
+text = "Rechazar datos de autoría no portables y normalizar antes de hashing."
+acceptance = "NaN, fecha TOML nativa o entero no seguro fallan; defaults semánticos son deterministas."

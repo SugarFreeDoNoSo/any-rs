@@ -1,0 +1,34 @@
+{
+  "specversion": "1.0",
+  "id": "evt_001",
+  "source": "urn:framework:core",
+  "type": "dev.framework.object.created.v1",
+  "subject": "sales.order/order_001",
+  "time": "2026-10-22T17:00:00Z",
+  "datacontenttype": "application/json",
+  "data": {
+    "resource": {
+      "type": "sales.order",
+      "id": "order_001"
+    },
+    "schema_version": 1,
+    "revision": 1,
+    "commit_id": "commit_001",
+    "values": {
+      "total": {
+        "type": "sales.money",
+        "id": "money_001"
+      }
+    },
+    "deleted": false
+  },
+  "businessid": "biz_demo",
+  "projectid": "sales",
+  "clientid": "client_acme",
+  "operationid": "op_001",
+  "correlationid": "corr_001",
+  "causationid": "cmd_001",
+  "aggregateversion": 1,
+  "releaseid": "release_001",
+  "hopcount": 1
+}

@@ -1,0 +1,21 @@
+api_version = "framework/v1alpha1"
+kind = "Relation"
+id = "sales.customer_order"
+version = 1
+unique_pair = true
+on_delete = "restrict"
+
+[left]
+target = "sales.customer"
+
+[left.cardinality]
+min = 0
+# max omitido: varios pedidos por cliente de dominio.
+
+[right]
+target = "sales.order"
+
+[right.cardinality]
+min = 0
+max = 1
+# Un pedido se enlaza con un máximo de un cliente de dominio.

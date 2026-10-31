@@ -1,0 +1,9 @@
+{
+  "select": [
+    "id",
+    "total.amount",
+    "total.currency"
+  ],
+  "source": "authoritative",
+  "limit": 25
+}

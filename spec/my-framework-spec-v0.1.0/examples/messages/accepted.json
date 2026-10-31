@@ -1,0 +1,5 @@
+{
+  "operation_id": "op_001",
+  "status": "accepted",
+  "operation_url": "/v2/businesses/biz_demo/projects/sales/clients/client_acme/operations/op_001"
+}

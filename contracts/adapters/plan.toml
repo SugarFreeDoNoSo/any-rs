@@ -1,0 +1,67 @@
+revision = "0.1.0-contract.1"
+project = "any-rs"
+status = "proposed"
+implemented = false
+enabled = false
+original_specification = "0.1.0-draft.1"
+initial_storage = "turso_libsql_remote"
+
+[[runtimes]]
+id = "cloudflare_workers"
+model = "isolate"
+artifact = "wasm32-unknown-unknown"
+core_language = "rust_candidate"
+bridge = "workers_rs_js_bindings"
+local_disk_authoritative = false
+network = "https_fetch"
+invocation_lifetime = "ephemeral"
+
+[[runtimes]]
+id = "cloudflare_containers"
+model = "container"
+artifact = "linux/amd64"
+core_language = "rust_candidate"
+bridge = "worker_durable_object_container_api"
+local_disk_authoritative = false
+network = "https_client"
+invocation_lifetime = "restartable"
+
+[storage]
+id = "turso_libsql_remote"
+engine_family = "libsql"
+transport = "https"
+worker_client = "@libsql/client/web"
+worker_client_version = "pin_in_implementation"
+container_client = "select_and_verify_native_rust_http_client"
+credential = { env = "TURSO_AUTH_TOKEN" }
+endpoint = { env = "TURSO_DATABASE_URL" }
+transaction_scope = "same_database"
+certification = "proposed"
+certified_capabilities = []
+candidate_capabilities = ["atomic_ingress", "atomic_state_inbox_outbox_operation", "conditional_write", "leases_with_fencing", "independent_subscriptions", "dead_letter"]
+
+[buffer]
+authority = "turso_libsql_remote"
+communication = "durable_messages_only"
+acceptance_records = ["command", "operation", "idempotency"]
+commit_records = ["state", "inbox", "outbox", "operation"]
+transaction_mode = "write"
+atomicity = "single_database_transaction"
+wait_until_is_durable = false
+memory_is_durable = false
+optional_wakeup = "notification_only_not_authority"
+projection_reopens_origin_operation = false
+unknown_commit = "reconcile_before_retry"
+lease_time_source = "database_authoritative"
+
+[security]
+tenant_scope = ["business_id", "project_id", "client_id"]
+authorization = "trusted_identity_current_membership_deny_by_default"
+worker_reauthorizes = true
+parameterized_sql = true
+public_sdk_contains_database_token = false
+network_exclusivity = "not_claimed_by_bearer_token"
+caller_selects_database_endpoint = false
+
+[activation]
+requires = ["original_validation", "contract_tests", "workers_build", "container_build", "live_remote_transaction_tests", "authorization_conformance", "fault_recovery_conformance", "cost_and_deployment_approval"]

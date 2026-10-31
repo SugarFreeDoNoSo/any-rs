@@ -1,0 +1,2511 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "My freamework: contratos propuestos",
+  "$comment": "Este archivo es una biblioteca de $defs. Seleccionar una definición para validar una instancia. Las restricciones semánticas están en SPECIFICATION.md.",
+  "$defs": {
+    "Identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+    },
+    "TypeName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+      "maxLength": 128
+    },
+    "FieldName": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*$",
+      "maxLength": 128
+    },
+    "Version": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2147483647
+    },
+    "Revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "DataScope": {
+      "type": "object",
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "project_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "client_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "business_id",
+        "project_id",
+        "client_id"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectScope": {
+      "type": "object",
+      "properties": {
+        "business_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "project_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "business_id",
+        "project_id"
+      ],
+      "additionalProperties": false
+    },
+    "Scope": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/DataScope"
+        },
+        {
+          "$ref": "#/$defs/ProjectScope"
+        }
+      ]
+    },
+    "Primitive": {
+      "type": [
+        "string",
+        "integer",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "ObjectRef": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "Values": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/FieldName"
+      },
+      "additionalProperties": {
+        "oneOf": [
+          {
+            "$ref": "#/$defs/Primitive"
+          },
+          {
+            "$ref": "#/$defs/ObjectRef"
+          }
+        ]
+      },
+      "maxProperties": 256
+    },
+    "ScalarField": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "string",
+            "integer",
+            "number",
+            "boolean"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "nullable": {
+          "type": "boolean"
+        },
+        "format": {
+          "enum": [
+            "date-time",
+            "date",
+            "decimal",
+            "uuid",
+            "bytes-base64"
+          ]
+        },
+        "min_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_length": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "minimum": {
+          "type": "number"
+        },
+        "maximum": {
+          "type": "number"
+        },
+        "pattern": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "one_of": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Primitive"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "type",
+        "required",
+        "nullable"
+      ],
+      "additionalProperties": false
+    },
+    "ReferenceField": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "reference"
+        },
+        "target": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "nullable": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "target",
+        "required",
+        "nullable"
+      ],
+      "additionalProperties": false
+    },
+    "Cardinality": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "min"
+      ],
+      "additionalProperties": false
+    },
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "target": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "cardinality": {
+          "$ref": "#/$defs/Cardinality"
+        }
+      },
+      "required": [
+        "target",
+        "cardinality"
+      ],
+      "additionalProperties": false
+    },
+    "ValueObjectDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "ValueObject"
+        },
+        "id": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "immutable": {
+          "const": true
+        },
+        "fields": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 256,
+          "propertyNames": {
+            "$ref": "#/$defs/FieldName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/ScalarField"
+          }
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "immutable",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "EntityDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Entity"
+        },
+        "id": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "fields": {
+          "type": "object",
+          "maxProperties": 256,
+          "propertyNames": {
+            "$ref": "#/$defs/FieldName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/ReferenceField"
+          }
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "fields"
+      ],
+      "additionalProperties": false
+    },
+    "RelationDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Relation"
+        },
+        "id": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "left": {
+          "$ref": "#/$defs/Endpoint"
+        },
+        "right": {
+          "$ref": "#/$defs/Endpoint"
+        },
+        "unique_pair": {
+          "const": true
+        },
+        "on_delete": {
+          "const": "restrict"
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "left",
+        "right",
+        "unique_pair",
+        "on_delete"
+      ],
+      "additionalProperties": false
+    },
+    "TypeDefinition": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValueObjectDefinition"
+        },
+        {
+          "$ref": "#/$defs/EntityDefinition"
+        },
+        {
+          "$ref": "#/$defs/RelationDefinition"
+        }
+      ]
+    },
+    "EventDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Event"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "message_type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.]+\\.v[1-9][0-9]*$"
+        },
+        "data_schema": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "retention_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "replay_safe": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "message_type",
+        "data_schema",
+        "retention_days",
+        "replay_safe"
+      ],
+      "additionalProperties": false
+    },
+    "CommandDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Command"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "message_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "owner": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "input_schema": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "required_action": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "emits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "message_name",
+        "owner",
+        "input_schema",
+        "required_action",
+        "emits"
+      ],
+      "additionalProperties": false
+    },
+    "HandlerDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Handler"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "runtime_entrypoint": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "artifact_version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "consumes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "emits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "required_profile": {
+          "type": "string",
+          "minLength": 1
+        },
+        "service_principal": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "runtime_entrypoint",
+        "artifact_version",
+        "consumes",
+        "emits",
+        "required_profile",
+        "service_principal"
+      ],
+      "additionalProperties": false
+    },
+    "SubscriptionDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Subscription"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "message_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "handler": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "delivery": {
+          "const": "at_least_once"
+        },
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "lease_ms": {
+          "type": "integer",
+          "minimum": 100
+        },
+        "ordered_by": {
+          "enum": [
+            "aggregate",
+            "none"
+          ]
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "message_types",
+        "handler",
+        "delivery",
+        "max_attempts",
+        "lease_ms",
+        "ordered_by"
+      ],
+      "additionalProperties": false
+    },
+    "Operand": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "path": {
+              "enum": [
+                "principal.id",
+                "session.scope",
+                "resource.scope",
+                "resource.created_by",
+                "resource.type",
+                "session.client_id"
+              ]
+            }
+          },
+          "required": [
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "literal": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null",
+                "array"
+              ]
+            }
+          },
+          "required": [
+            "literal"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "Condition": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "eq",
+                "in"
+              ]
+            },
+            "left": {
+              "$ref": "#/$defs/Operand"
+            },
+            "right": {
+              "$ref": "#/$defs/Operand"
+            }
+          },
+          "required": [
+            "op",
+            "left",
+            "right"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "const": "same_scope"
+            }
+          },
+          "required": [
+            "op"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "all",
+                "any"
+              ]
+            },
+            "conditions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Condition"
+              },
+              "minItems": 1,
+              "maxItems": 128
+            }
+          },
+          "required": [
+            "op",
+            "conditions"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "PolicyRule": {
+      "type": "object",
+      "properties": {
+        "effect": {
+          "enum": [
+            "allow",
+            "deny"
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "subject_profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "resource_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TypeName"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "condition": {
+          "$ref": "#/$defs/Condition"
+        }
+      },
+      "required": [
+        "effect",
+        "actions",
+        "subject_profiles",
+        "condition"
+      ],
+      "additionalProperties": false
+    },
+    "PolicyDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Policy"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "default_effect": {
+          "const": "deny"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PolicyRule"
+          },
+          "minItems": 1,
+          "maxItems": 128
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "default_effect",
+        "rules"
+      ],
+      "additionalProperties": false
+    },
+    "ProfileDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Profile"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "assignment_scope": {
+          "enum": [
+            "business",
+            "project",
+            "client"
+          ]
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "permissions",
+        "assignment_scope"
+      ],
+      "additionalProperties": false
+    },
+    "ViewDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "View"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "renderer": {
+          "enum": [
+            "html-htmx",
+            "headless"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "query": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "$ref": "#/$defs/TypeName"
+            },
+            "select": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            },
+            "source": {
+              "enum": [
+                "authoritative",
+                "projection"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "select",
+            "source"
+          ],
+          "additionalProperties": false
+        },
+        "actions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "editable_paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^/draft/[^\\s]+$"
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "renderer",
+        "query",
+        "actions",
+        "editable_paths"
+      ],
+      "additionalProperties": false
+    },
+    "Definition": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/TypeDefinition"
+        },
+        {
+          "$ref": "#/$defs/EventDefinition"
+        },
+        {
+          "$ref": "#/$defs/CommandDefinition"
+        },
+        {
+          "$ref": "#/$defs/HandlerDefinition"
+        },
+        {
+          "$ref": "#/$defs/SubscriptionDefinition"
+        },
+        {
+          "$ref": "#/$defs/PolicyDefinition"
+        },
+        {
+          "$ref": "#/$defs/ProfileDefinition"
+        },
+        {
+          "$ref": "#/$defs/ViewDefinition"
+        }
+      ]
+    },
+    "EnvRef": {
+      "type": "object",
+      "properties": {
+        "env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        }
+      },
+      "required": [
+        "env"
+      ],
+      "additionalProperties": false
+    },
+    "Binding": {
+      "type": "object",
+      "properties": {
+        "engine": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "adapter": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "role": {
+          "enum": [
+            "state",
+            "queue",
+            "blob",
+            "projection",
+            "registry"
+          ]
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": {
+            "type": [
+              "string",
+              "number",
+              "boolean"
+            ]
+          }
+        },
+        "credentials": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/EnvRef"
+          }
+        }
+      },
+      "required": [
+        "engine",
+        "adapter",
+        "role"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectConfig": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Project"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "scope": {
+          "$ref": "#/$defs/ProjectScope"
+        },
+        "authoring": {
+          "type": "object",
+          "properties": {
+            "toml_version": {
+              "const": "1.0.0"
+            },
+            "toon_enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "toml_version",
+            "toon_enabled"
+          ],
+          "additionalProperties": false
+        },
+        "definitions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "bindings": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "$ref": "#/$defs/Binding"
+          }
+        },
+        "limits": {
+          "type": "object",
+          "properties": {
+            "request_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "event_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_hops": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "max_attempts": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "idempotency_days": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "cursor_seconds": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "snapshot_seconds": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "request_bytes",
+            "event_bytes",
+            "max_hops",
+            "max_attempts",
+            "idempotency_days",
+            "cursor_seconds",
+            "snapshot_seconds"
+          ],
+          "additionalProperties": false
+        },
+        "required_profiles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "scope",
+        "authoring",
+        "definitions",
+        "bindings",
+        "limits",
+        "required_profiles"
+      ],
+      "additionalProperties": false
+    },
+    "EngineDefinition": {
+      "type": "object",
+      "properties": {
+        "api_version": {
+          "const": "framework/v1alpha1"
+        },
+        "kind": {
+          "const": "Engine"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000
+        },
+        "driver": {
+          "type": "string",
+          "minLength": 1
+        },
+        "certification": {
+          "enum": [
+            "proposed",
+            "conformant"
+          ]
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "transaction_scope": {
+          "enum": [
+            "client_scope",
+            "project_scope",
+            "same_database"
+          ]
+        },
+        "external_state": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "api_version",
+        "kind",
+        "id",
+        "version",
+        "driver",
+        "certification",
+        "capabilities",
+        "transaction_scope",
+        "external_state"
+      ],
+      "additionalProperties": false
+    },
+    "Business": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Client": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "business_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "id",
+        "business_id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "Principal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "kind": {
+          "enum": [
+            "user",
+            "service"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "disabled"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "Membership": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "business_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "client_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "profiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "principal_id",
+        "business_id",
+        "project_ids",
+        "client_ids",
+        "profiles",
+        "revision",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "PublicSession": {
+      "type": "object",
+      "properties": {
+        "principal": {
+          "$ref": "#/$defs/Principal"
+        },
+        "membership_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "active_scope": {
+          "$ref": "#/$defs/DataScope"
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "policy_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "membership_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "principal",
+        "membership_id",
+        "active_scope",
+        "expires_at",
+        "policy_revision",
+        "membership_revision"
+      ],
+      "additionalProperties": false
+    },
+    "ViewModel": {
+      "type": "object",
+      "properties": {
+        "view_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "enum": [
+            "clean",
+            "editing",
+            "submitting",
+            "pending",
+            "synced",
+            "invalid",
+            "conflict",
+            "failed"
+          ]
+        },
+        "data": {
+          "type": "object"
+        },
+        "draft": {
+          "type": "object"
+        },
+        "errors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "pending_operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Identifier"
+          },
+          "uniqueItems": true
+        },
+        "dirty": {
+          "type": "boolean"
+        },
+        "base_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "view_id",
+        "status",
+        "data",
+        "draft",
+        "errors",
+        "pending_operations",
+        "dirty"
+      ],
+      "additionalProperties": false
+    },
+    "CommandInput": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "name",
+        "version",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.create"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/CreateObjectPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.update"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/UpdateObjectPayload"
+              }
+            },
+            "required": [
+              "expected_revision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.delete"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/DeleteObjectPayload"
+              }
+            },
+            "required": [
+              "expected_revision"
+            ]
+          }
+        }
+      ]
+    },
+    "CreateObjectInput": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        },
+        "schema": {
+          "$ref": "#/$defs/TypeDefinition"
+        }
+      },
+      "required": [
+        "schema_version",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateObjectInput": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        },
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "schema_version",
+        "values",
+        "expected_revision"
+      ],
+      "additionalProperties": false
+    },
+    "DeleteObjectInput": {
+      "type": "object",
+      "properties": {
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "expected_revision"
+      ],
+      "additionalProperties": false
+    },
+    "ReleaseInput": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "expected_registry_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "documents": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Definition"
+          },
+          "minItems": 1,
+          "maxItems": 1000
+        }
+      },
+      "required": [
+        "release_id",
+        "expected_registry_revision",
+        "documents"
+      ],
+      "additionalProperties": false
+    },
+    "CreateObjectPayload": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        },
+        "schema": {
+          "$ref": "#/$defs/TypeDefinition"
+        }
+      },
+      "required": [
+        "type",
+        "schema_version",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "UpdateObjectPayload": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        }
+      },
+      "required": [
+        "type",
+        "id",
+        "schema_version",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "DeleteObjectPayload": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ],
+      "additionalProperties": false
+    },
+    "Command": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "command"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source": {
+          "type": "string",
+          "format": "uri"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "version": {
+          "$ref": "#/$defs/Version"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "principal_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "correlation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "release_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "accepted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deadline": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "hop_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        },
+        "payload": {
+          "type": "object"
+        },
+        "expected_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "source",
+        "name",
+        "version",
+        "scope",
+        "principal_id",
+        "operation_id",
+        "correlation_id",
+        "release_id",
+        "accepted_at",
+        "deadline",
+        "hop_count",
+        "payload"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.create"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/CreateObjectPayload"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.update"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/UpdateObjectPayload"
+              }
+            },
+            "required": [
+              "expected_revision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.object.delete"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "payload": {
+                "$ref": "#/$defs/DeleteObjectPayload"
+              }
+            },
+            "required": [
+              "expected_revision"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "const": "core.definition.release.publish"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "scope": {
+                "$ref": "#/$defs/ProjectScope"
+              },
+              "payload": {
+                "$ref": "#/$defs/ReleaseInput"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "name": {
+                "enum": [
+                  "core.object.create",
+                  "core.object.update",
+                  "core.object.delete"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "scope": {
+                "$ref": "#/$defs/DataScope"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "Event": {
+      "type": "object",
+      "properties": {
+        "specversion": {
+          "const": "1.0"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "source": {
+          "type": "string",
+          "format": "uri"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_.]+\\.v[1-9][0-9]*$"
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "datacontenttype": {
+          "const": "application/json"
+        },
+        "data": {
+          "type": "object"
+        },
+        "businessid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "projectid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "clientid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "operationid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "correlationid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "causationid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "aggregateversion": {
+          "$ref": "#/$defs/Revision"
+        },
+        "releaseid": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "hopcount": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 16
+        }
+      },
+      "required": [
+        "specversion",
+        "id",
+        "source",
+        "type",
+        "subject",
+        "time",
+        "datacontenttype",
+        "data",
+        "businessid",
+        "projectid",
+        "operationid",
+        "correlationid",
+        "causationid",
+        "aggregateversion",
+        "releaseid",
+        "hopcount"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "enum": [
+                  "dev.framework.object.created.v1",
+                  "dev.framework.object.updated.v1"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "clientid"
+            ],
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/ObjectCreatedData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "dev.framework.object.deleted.v1"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "clientid"
+            ],
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/ObjectDeletedData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "dev.framework.definition.published.v1"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/DefinitionPublishedData"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "type": {
+                "const": "dev.framework.projection.updated.v1"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "clientid"
+            ],
+            "properties": {
+              "data": {
+                "$ref": "#/$defs/ProjectionUpdatedData"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ResourceResult": {
+      "type": "object",
+      "properties": {
+        "commit_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          }
+        },
+        "registry_revision": {
+          "$ref": "#/$defs/Revision"
+        }
+      },
+      "required": [
+        "commit_id"
+      ],
+      "additionalProperties": false
+    },
+    "Problem": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "format": "uri"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 400,
+          "maximum": 599
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "request_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "type",
+        "title",
+        "status",
+        "code",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "Operation": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "command_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "running",
+            "retrying",
+            "succeeded",
+            "rejected",
+            "failed",
+            "expired"
+          ]
+        },
+        "accepted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "result": {
+          "$ref": "#/$defs/ResourceResult"
+        },
+        "problem": {
+          "$ref": "#/$defs/Problem"
+        }
+      },
+      "required": [
+        "operation_id",
+        "scope",
+        "command_name",
+        "status",
+        "accepted_at",
+        "updated_at"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "succeeded"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "result"
+            ],
+            "not": {
+              "required": [
+                "problem"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "rejected",
+                  "failed",
+                  "expired"
+                ]
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "problem"
+            ],
+            "not": {
+              "required": [
+                "result"
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "accepted",
+                  "running",
+                  "retrying"
+                ]
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "result"
+                  ]
+                },
+                {
+                  "required": [
+                    "problem"
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "Accepted": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "running",
+            "retrying",
+            "succeeded",
+            "rejected",
+            "failed",
+            "expired"
+          ]
+        },
+        "operation_url": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "required": [
+        "operation_id",
+        "status",
+        "operation_url"
+      ],
+      "additionalProperties": false,
+      "description": "Una reentrega idempotente puede devolver la operación ya terminal; 202 no declara éxito de dominio."
+    },
+    "ObjectDocument": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/DataScope"
+        },
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        },
+        "commit_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "scope",
+        "type",
+        "id",
+        "schema_version",
+        "revision",
+        "values",
+        "commit_id"
+      ],
+      "additionalProperties": false
+    },
+    "Predicate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "eq",
+                "lt",
+                "lte",
+                "gt",
+                "gte"
+              ]
+            },
+            "field": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "value": {
+              "$ref": "#/$defs/Primitive"
+            }
+          },
+          "required": [
+            "op",
+            "field",
+            "value"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "const": "in"
+            },
+            "field": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Primitive"
+              },
+              "minItems": 1,
+              "maxItems": 1000
+            }
+          },
+          "required": [
+            "op",
+            "field",
+            "values"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "op": {
+              "enum": [
+                "and",
+                "or"
+              ]
+            },
+            "terms": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/Predicate"
+              },
+              "minItems": 1,
+              "maxItems": 128
+            }
+          },
+          "required": [
+            "op",
+            "terms"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "QueryInput": {
+      "type": "object",
+      "properties": {
+        "select": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true
+        },
+        "source": {
+          "enum": [
+            "authoritative",
+            "projection"
+          ]
+        },
+        "where": {
+          "$ref": "#/$defs/Predicate"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "cursor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 8192
+        },
+        "min_commit": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "select",
+        "source",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "QueryResult": {
+      "type": "object",
+      "properties": {
+        "scope": {
+          "$ref": "#/$defs/DataScope"
+        },
+        "type": {
+          "$ref": "#/$defs/TypeName"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          },
+          "maxItems": 1000
+        },
+        "source": {
+          "enum": [
+            "authoritative",
+            "projection"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "current",
+            "lagging"
+          ]
+        },
+        "watermark": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 8192
+        }
+      },
+      "required": [
+        "scope",
+        "type",
+        "items",
+        "source",
+        "freshness",
+        "watermark",
+        "next_cursor"
+      ],
+      "additionalProperties": false
+    },
+    "ObjectCreatedData": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "commit_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "values": {
+          "$ref": "#/$defs/Values"
+        },
+        "deleted": {
+          "const": false
+        }
+      },
+      "required": [
+        "resource",
+        "schema_version",
+        "revision",
+        "commit_id",
+        "values",
+        "deleted"
+      ],
+      "additionalProperties": false
+    },
+    "ObjectDeletedData": {
+      "type": "object",
+      "properties": {
+        "resource": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/Version"
+        },
+        "revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "commit_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "deleted": {
+          "const": true
+        }
+      },
+      "required": [
+        "resource",
+        "schema_version",
+        "revision",
+        "commit_id",
+        "deleted"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectionUpdatedData": {
+      "type": "object",
+      "properties": {
+        "view_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "generation": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "watermark": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "view_id",
+        "generation",
+        "watermark"
+      ],
+      "additionalProperties": false
+    },
+    "DefinitionPublishedData": {
+      "type": "object",
+      "properties": {
+        "release_id": {
+          "$ref": "#/$defs/Identifier"
+        },
+        "registry_revision": {
+          "$ref": "#/$defs/Revision"
+        },
+        "commit_id": {
+          "$ref": "#/$defs/Identifier"
+        }
+      },
+      "required": [
+        "release_id",
+        "registry_revision",
+        "commit_id"
+      ],
+      "additionalProperties": false
+    },
+    "VersionInfo": {
+      "type": "object",
+      "properties": {
+        "specification": {
+          "const": "0.1.0-draft.1"
+        },
+        "language": {
+          "const": "framework/v1alpha1"
+        },
+        "http_api": {
+          "const": "v2"
+        }
+      },
+      "required": [
+        "specification",
+        "language",
+        "http_api"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

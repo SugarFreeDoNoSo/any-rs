@@ -1,0 +1,11 @@
+engine = "s3_candidate"
+adapter = "s3_blob"
+role = "blob"
+
+[options]
+bucket = "example-private-bucket"
+region = "example-region"
+
+[credentials]
+access_key_id = { env = "BLOB_ACCESS_KEY_ID" }
+secret_access_key = { env = "BLOB_SECRET_ACCESS_KEY" }

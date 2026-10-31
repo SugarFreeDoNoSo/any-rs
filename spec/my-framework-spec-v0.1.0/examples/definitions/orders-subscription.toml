@@ -1,0 +1,10 @@
+api_version = "framework/v1alpha1"
+kind = "Subscription"
+id = "sales.orders_projection"
+version = 1
+message_types = ["dev.framework.object.created.v1"]
+handler = "sales.orders_projector"
+delivery = "at_least_once"
+max_attempts = 8
+lease_ms = 30000
+ordered_by = "aggregate"

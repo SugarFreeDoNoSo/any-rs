@@ -1,0 +1,10 @@
+api_version = "framework/v1alpha1"
+kind = "Handler"
+id = "core.create_object_handler"
+version = 1
+runtime_entrypoint = "core.handlers.create_object"
+artifact_version = "reference-0.1.0"
+consumes = ["core.object.create"]
+emits = ["dev.framework.object.created.v1"]
+required_profile = "durable_async"
+service_principal = "service_core"

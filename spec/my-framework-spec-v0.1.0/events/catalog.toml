@@ -1,0 +1,109 @@
+specification = "0.1.0-draft.1"
+status = "proposed"
+implemented = false
+event_envelope = "CloudEvents 1.0, perfil JSON cerrado del proyecto"
+command_envelope = "Command"
+
+# Catálogo mínimo del core propuesto. El ejemplo de proyecto habilita solo creación y proyección.
+# Los handlers adicionales deben instalarse y registrarse para habilitar sus comandos.
+
+[[commands]]
+name = "core.object.create"
+version = 1
+input_schema = "CreateObjectPayload"
+owner = "core.create_object_handler"
+action = "object.create"
+scope = "client"
+emits = ["dev.framework.object.created.v1"]
+extra_action_for_new_type = "definition.publish"
+extra_profile_for_new_type = "registry_data_atomic"
+
+[[commands]]
+name = "core.object.update"
+version = 1
+input_schema = "UpdateObjectPayload"
+owner = "core.update_object_handler"
+action = "object.update"
+scope = "client"
+emits = ["dev.framework.object.updated.v1"]
+requires_expected_revision = true
+
+[[commands]]
+name = "core.object.delete"
+version = 1
+input_schema = "DeleteObjectPayload"
+owner = "core.delete_object_handler"
+action = "object.delete"
+scope = "client"
+emits = ["dev.framework.object.deleted.v1"]
+requires_expected_revision = true
+
+[[commands]]
+name = "core.definition.release.publish"
+version = 1
+input_schema = "ReleaseInput"
+owner = "core.publish_release_handler"
+action = "definition.publish"
+scope = "project"
+emits = ["dev.framework.definition.published.v1"]
+
+[[handlers]]
+id = "core.create_object_handler"
+runtime_entrypoint = "core.handlers.create_object"
+consumes = ["core.object.create"]
+emits = ["dev.framework.object.created.v1"]
+
+[[handlers]]
+id = "core.update_object_handler"
+runtime_entrypoint = "core.handlers.update_object"
+consumes = ["core.object.update"]
+emits = ["dev.framework.object.updated.v1"]
+
+[[handlers]]
+id = "core.delete_object_handler"
+runtime_entrypoint = "core.handlers.delete_object"
+consumes = ["core.object.delete"]
+emits = ["dev.framework.object.deleted.v1"]
+
+[[handlers]]
+id = "core.publish_release_handler"
+runtime_entrypoint = "core.handlers.publish_release"
+consumes = ["core.definition.release.publish"]
+emits = ["dev.framework.definition.published.v1"]
+
+[[events]]
+type = "dev.framework.object.created.v1"
+data_schema = "ObjectCreatedData"
+scope = "client"
+description = "Objeto confirmado, con valores y revisión del commit."
+
+[[events]]
+type = "dev.framework.object.updated.v1"
+data_schema = "ObjectCreatedData"
+scope = "client"
+description = "Estado completo confirmado del objeto mutable después del cambio."
+
+[[events]]
+type = "dev.framework.object.deleted.v1"
+data_schema = "ObjectDeletedData"
+scope = "client"
+description = "Tombstone confirmado; no afirma borrado físico."
+
+[[events]]
+type = "dev.framework.definition.published.v1"
+data_schema = "DefinitionPublishedData"
+scope = "project"
+description = "Release coherente confirmado en el registro."
+
+[[events]]
+type = "dev.framework.projection.updated.v1"
+data_schema = "ProjectionUpdatedData"
+scope = "client"
+description = "Watermark de una proyección actualizado; emisión optativa y sin autosuscripción."
+
+[[subscriptions]]
+id = "sales.orders_projection"
+types = ["dev.framework.object.created.v1"]
+handler = "sales.orders_projector"
+enabled_in_example = true
+rebuild_requires = "checkpoint completo y cambios retenidos; sin efectos externos"

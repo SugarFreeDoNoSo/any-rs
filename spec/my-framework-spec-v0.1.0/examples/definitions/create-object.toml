@@ -1,0 +1,9 @@
+api_version = "framework/v1alpha1"
+kind = "Command"
+id = "core.create_object"
+version = 1
+message_name = "core.object.create"
+owner = "core.create_object_handler"
+input_schema = "CreateObjectPayload"
+required_action = "object.create"
+emits = ["dev.framework.object.created.v1"]

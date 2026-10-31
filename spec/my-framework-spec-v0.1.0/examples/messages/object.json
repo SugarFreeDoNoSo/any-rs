@@ -1,0 +1,18 @@
+{
+  "scope": {
+    "business_id": "biz_demo",
+    "project_id": "sales",
+    "client_id": "client_acme"
+  },
+  "type": "sales.order",
+  "id": "order_001",
+  "schema_version": 1,
+  "revision": 1,
+  "values": {
+    "total": {
+      "type": "sales.money",
+      "id": "money_001"
+    }
+  },
+  "commit_id": "commit_001"
+}

@@ -1,0 +1,19 @@
+{
+  "operation_id": "op_002",
+  "scope": {
+    "business_id": "biz_demo",
+    "project_id": "sales",
+    "client_id": "client_acme"
+  },
+  "command_name": "core.object.create",
+  "status": "rejected",
+  "accepted_at": "2026-10-22T17:00:00Z",
+  "updated_at": "2026-10-22T17:00:00Z",
+  "problem": {
+    "type": "about:blank",
+    "title": "La revisión cambió antes del commit.",
+    "status": 409,
+    "code": "RevisionConflict",
+    "request_id": "req_002"
+  }
+}

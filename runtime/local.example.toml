@@ -1,0 +1,11 @@
+# Local development profile. Credentials are read from environment, not stored here.
+bind = "127.0.0.1:8080"
+database = "any-rs-local.sqlite3"
+poll_ms = 20
+
+[[principals]]
+id = "local-developer"
+token_env = "ANYRS_LOCAL_TOKEN"
+business_id = "demo"
+project_id = "notes"
+client_id = "local"

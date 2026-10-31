@@ -1,0 +1,104 @@
+{
+  "revision": "0.1.0-contract.1",
+  "execution": "specified_not_live_executed",
+  "scenarios": [
+    {
+      "id": "ADP-001",
+      "requirements": [
+        "REQ-011",
+        "REQ-020"
+      ],
+      "acceptance": "Commit ingress before HTTP 202; inject failure after each command/operation/idempotency write and immediately before commit, proving all-or-none records. Lose the response after commit and replay the same idempotency key, returning the same operation without duplicate commands."
+    },
+    {
+      "id": "ADP-002",
+      "requirements": [
+        "REQ-012"
+      ],
+      "acceptance": "State, inbox, outbox and owning operation commit together; injected failure leaves no partial domain update."
+    },
+    {
+      "id": "ADP-003",
+      "requirements": [
+        "REQ-005"
+      ],
+      "acceptance": "The same object ID in another business/project/client cannot be read, linked, leased or acknowledged using the caller scope."
+    },
+    {
+      "id": "ADP-004",
+      "requirements": [
+        "REQ-014"
+      ],
+      "acceptance": "Expired lease epoch and stale object revision cannot commit; database time controls leases."
+    },
+    {
+      "id": "ADP-005",
+      "requirements": [
+        "REQ-013"
+      ],
+      "acceptance": "Two subscriptions independently receive and acknowledge one stable message ID."
+    },
+    {
+      "id": "ADP-006",
+      "requirements": [
+        "REQ-019"
+      ],
+      "acceptance": "A downstream projection failure does not reopen a succeeded originating operation."
+    },
+    {
+      "id": "ADP-007",
+      "requirements": [
+        "REQ-020",
+        "REQ-026"
+      ],
+      "acceptance": "Unknown commit response is reconciled from idempotency/inbox/operation state before retry; external effects are never blindly replayed."
+    },
+    {
+      "id": "ADP-008",
+      "requirements": [
+        "REQ-001",
+        "REQ-010"
+      ],
+      "acceptance": "Workers and Containers exchange durable messages, not application-handler RPC; memory, waitUntil and transport notifications cannot certify the buffer."
+    },
+    {
+      "id": "ADP-009",
+      "requirements": [
+        "REQ-009"
+      ],
+      "acceptance": "Revoked membership is denied at execution and every read; a body principal or scope cannot replace trusted context. SQL metacharacters remain bound values, dynamic identifiers are allowlisted, and arbitrary client SQL is rejected."
+    },
+    {
+      "id": "ADP-010",
+      "requirements": [
+        "REQ-003",
+        "REQ-023",
+        "REQ-028"
+      ],
+      "acceptance": "Database URL/token are server-only environment references; logs and public bundles never contain token values."
+    },
+    {
+      "id": "ADP-011",
+      "requirements": [
+        "REQ-010"
+      ],
+      "acceptance": "Worker rejects native filesystem/SQLite bindings; unsupported new-Turso vs libSQL transport is rejected, never silently coerced."
+    },
+    {
+      "id": "ADP-012",
+      "requirements": [
+        "REQ-012",
+        "REQ-015"
+      ],
+      "acceptance": "Stopping/restarting a Container or terminating an isolate leaves durable pending work recoverable within its retry budget."
+    },
+    {
+      "id": "ADP-013",
+      "requirements": [
+        "REQ-010",
+        "REQ-029"
+      ],
+      "acceptance": "Browser memory/OPFS/IndexedDB/cache and ephemeral container disk do not satisfy server durable_async; local persistence is not authorization or backup."
+    }
+  ]
+}

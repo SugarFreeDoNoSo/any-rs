@@ -1,0 +1,16 @@
+api_version = "framework/v1alpha1"
+kind = "View"
+id = "sales.orders"
+version = 1
+renderer = "html-htmx"
+template = "templates/orders.html"
+editable_paths = ["/draft/money_id"]
+
+[query]
+type = "sales.order"
+select = ["id", "total.amount", "total.currency"]
+source = "authoritative"
+
+[actions]
+submit = "core.object.create"
+# La acción requiere un VO de dinero ya confirmado; el BFF debe preparar su referencia.

@@ -1,0 +1,29 @@
+{
+  "kind": "command",
+  "id": "cmd_001",
+  "source": "urn:framework:gateway",
+  "name": "core.object.create",
+  "version": 1,
+  "scope": {
+    "business_id": "biz_demo",
+    "project_id": "sales",
+    "client_id": "client_acme"
+  },
+  "principal_id": "user_matias",
+  "operation_id": "op_001",
+  "correlation_id": "corr_001",
+  "release_id": "release_001",
+  "accepted_at": "2026-10-22T17:00:00Z",
+  "deadline": "2026-10-22T17:05:00Z",
+  "hop_count": 0,
+  "payload": {
+    "type": "sales.order",
+    "schema_version": 1,
+    "values": {
+      "total": {
+        "type": "sales.money",
+        "id": "money_001"
+      }
+    }
+  }
+}

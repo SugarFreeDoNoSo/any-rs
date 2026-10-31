@@ -1,0 +1,62 @@
+api_version = "framework/v1alpha1"
+kind = "Project"
+id = "sales"
+version = 1
+description = "Ejemplo de aplicación de ventas aislada por cliente."
+required_profiles = ["durable_async"]
+definitions = [
+  "definitions/display-name.toml",
+  "definitions/money.toml",
+  "definitions/customer.toml",
+  "definitions/order.toml",
+  "definitions/customer-order.toml",
+  "definitions/object-created.toml",
+  "definitions/create-object.toml",
+  "definitions/create-handler.toml",
+  "definitions/project-handler.toml",
+  "definitions/orders-subscription.toml",
+  "definitions/client-editor.toml",
+  "definitions/client-access.toml",
+  "definitions/orders-view.toml",
+]
+
+[scope]
+business_id = "biz_demo"
+project_id = "sales"
+
+[authoring]
+toml_version = "1.0.0"
+toon_enabled = false
+
+[limits]
+request_bytes = 262144
+event_bytes = 65536
+max_hops = 16
+max_attempts = 8
+idempotency_days = 7
+cursor_seconds = 900
+snapshot_seconds = 900
+
+[bindings.state]
+engine = "sqlite_local"
+adapter = "sqlite_state"
+role = "state"
+
+[bindings.state.credentials]
+connection = { env = "STATE_DATABASE_URL" }
+
+[bindings.queue]
+engine = "sqlite_local"
+adapter = "sqlite_queue"
+role = "queue"
+
+[bindings.queue.credentials]
+connection = { env = "STATE_DATABASE_URL" }
+
+[bindings.registry]
+engine = "sqlite_local"
+adapter = "sqlite_registry"
+role = "registry"
+
+[bindings.registry.credentials]
+connection = { env = "STATE_DATABASE_URL" }

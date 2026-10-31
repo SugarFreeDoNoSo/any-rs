@@ -1,0 +1,8 @@
+api_version = "framework/v1alpha1"
+kind = "Event"
+id = "core.object_created"
+version = 1
+message_type = "dev.framework.object.created.v1"
+data_schema = "ObjectCreatedData"
+retention_days = 30
+replay_safe = true

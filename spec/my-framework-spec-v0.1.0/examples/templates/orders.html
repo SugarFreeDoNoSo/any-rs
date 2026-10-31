@@ -1,0 +1,17 @@
+<!-- Plantilla de referencia: el BFF prepara URLs codificadas y tokens, y escapa todos los valores. -->
+<section id="orders-view" aria-live="polite">
+  <h1>Pedidos</h1>
+  <form method="post" action="{{ bff_submit_url }}"
+        hx-post="{{ bff_submit_url }}" hx-target="#orders-view" hx-swap="outerHTML">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Referencia de monto confirmado
+      <input name="money_id" required value="{{ draft.money_id }}">
+    </label>
+    <button type="submit">Crear pedido</button>
+  </form>
+  <p>{{ status_text }}</p>
+  <div>{{ orders_fragment }}</div>
+  <!-- orders_fragment se genera por el renderer confiable, sin HTML crudo procedente del usuario.
+       Para una operación pendiente, el BFF agrega un fragmento con hx-get=operation_poll_url
+       y hx-trigger="every 1s". Al terminar devuelve un fragmento sin polling. -->
+</section>

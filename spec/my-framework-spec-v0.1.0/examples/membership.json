@@ -1,0 +1,16 @@
+{
+  "id": "member_demo",
+  "principal_id": "user_matias",
+  "business_id": "biz_demo",
+  "project_ids": [
+    "sales"
+  ],
+  "client_ids": [
+    "client_acme"
+  ],
+  "profiles": [
+    "client_editor"
+  ],
+  "revision": 1,
+  "status": "active"
+}

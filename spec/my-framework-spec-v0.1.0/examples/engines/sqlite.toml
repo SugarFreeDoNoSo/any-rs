@@ -1,0 +1,19 @@
+api_version = "framework/v1alpha1"
+kind = "Engine"
+id = "sqlite_local"
+version = 1
+description = "Contrato de driver local propuesto; no implementación ni certificación."
+driver = "sqlite"
+certification = "proposed"
+transaction_scope = "same_database"
+external_state = false
+capabilities = [
+  "durable_read_write",
+  "atomic_state_inbox_outbox_operation",
+  "atomic_ingress",
+  "conditional_write",
+  "leases_with_fencing",
+  "independent_subscriptions",
+  "dead_letter",
+  "coherent_registry",
+]

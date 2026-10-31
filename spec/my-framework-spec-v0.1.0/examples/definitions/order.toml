@@ -1,0 +1,10 @@
+api_version = "framework/v1alpha1"
+kind = "Entity"
+id = "sales.order"
+version = 1
+
+[fields.total]
+type = "reference"
+target = "sales.money"
+required = true
+nullable = false

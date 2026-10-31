@@ -1,0 +1,6 @@
+api_version = "framework/v1alpha1"
+kind = "Profile"
+id = "client_editor"
+version = 1
+assignment_scope = "client"
+permissions = ["object.create", "object.read", "object.update", "object.query", "view.render"]

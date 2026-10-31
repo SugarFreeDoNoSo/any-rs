@@ -1,0 +1,18 @@
+api_version = "framework/v1alpha1"
+kind = "Policy"
+id = "client_access"
+version = 1
+default_effect = "deny"
+
+[[rules]]
+effect = "allow"
+actions = ["object.create", "object.read", "object.update", "object.query", "view.render"]
+subject_profiles = ["client_editor"]
+resource_types = ["core.display_name", "sales.money", "sales.customer", "sales.order", "sales.orders"]
+condition = { op = "same_scope" }
+
+[[rules]]
+effect = "deny"
+actions = ["object.delete"]
+subject_profiles = ["client_editor"]
+condition = { op = "same_scope" }

@@ -1,0 +1,317 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:any-rs:adapter-plan:0.1.0-contract.1",
+  "type": "object",
+  "properties": {
+    "revision": {
+      "const": "0.1.0-contract.1"
+    },
+    "project": {
+      "const": "any-rs"
+    },
+    "status": {
+      "const": "proposed"
+    },
+    "implemented": {
+      "const": false
+    },
+    "enabled": {
+      "const": false
+    },
+    "original_specification": {
+      "const": "0.1.0-draft.1"
+    },
+    "initial_storage": {
+      "const": "turso_libsql_remote"
+    },
+    "runtimes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "enum": [
+              "cloudflare_workers",
+              "cloudflare_containers"
+            ]
+          },
+          "model": {
+            "enum": [
+              "isolate",
+              "container"
+            ]
+          },
+          "artifact": {
+            "enum": [
+              "wasm32-unknown-unknown",
+              "linux/amd64"
+            ]
+          },
+          "core_language": {
+            "const": "rust_candidate"
+          },
+          "bridge": {
+            "enum": [
+              "workers_rs_js_bindings",
+              "worker_durable_object_container_api"
+            ]
+          },
+          "local_disk_authoritative": {
+            "const": false
+          },
+          "network": {
+            "enum": [
+              "https_fetch",
+              "https_client"
+            ]
+          },
+          "invocation_lifetime": {
+            "enum": [
+              "ephemeral",
+              "restartable"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "model",
+          "artifact",
+          "core_language",
+          "bridge",
+          "local_disk_authoritative",
+          "network",
+          "invocation_lifetime"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 2,
+      "uniqueItems": true
+    },
+    "storage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "turso_libsql_remote"
+        },
+        "engine_family": {
+          "const": "libsql"
+        },
+        "transport": {
+          "const": "https"
+        },
+        "worker_client": {
+          "const": "@libsql/client/web"
+        },
+        "worker_client_version": {
+          "const": "pin_in_implementation"
+        },
+        "container_client": {
+          "const": "select_and_verify_native_rust_http_client"
+        },
+        "credential": {
+          "type": "object",
+          "properties": {
+            "env": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          },
+          "required": [
+            "env"
+          ],
+          "additionalProperties": false
+        },
+        "endpoint": {
+          "type": "object",
+          "properties": {
+            "env": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]*$"
+            }
+          },
+          "required": [
+            "env"
+          ],
+          "additionalProperties": false
+        },
+        "transaction_scope": {
+          "const": "same_database"
+        },
+        "certification": {
+          "const": "proposed"
+        },
+        "certified_capabilities": {
+          "type": "array",
+          "maxItems": 0
+        },
+        "candidate_capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "id",
+        "engine_family",
+        "transport",
+        "worker_client",
+        "worker_client_version",
+        "container_client",
+        "credential",
+        "endpoint",
+        "transaction_scope",
+        "certification",
+        "certified_capabilities",
+        "candidate_capabilities"
+      ],
+      "additionalProperties": false
+    },
+    "buffer": {
+      "type": "object",
+      "properties": {
+        "authority": {
+          "const": "turso_libsql_remote"
+        },
+        "communication": {
+          "const": "durable_messages_only"
+        },
+        "acceptance_records": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "commit_records": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 4,
+          "uniqueItems": true
+        },
+        "transaction_mode": {
+          "const": "write"
+        },
+        "atomicity": {
+          "const": "single_database_transaction"
+        },
+        "wait_until_is_durable": {
+          "const": false
+        },
+        "memory_is_durable": {
+          "const": false
+        },
+        "optional_wakeup": {
+          "const": "notification_only_not_authority"
+        },
+        "projection_reopens_origin_operation": {
+          "const": false
+        },
+        "unknown_commit": {
+          "const": "reconcile_before_retry"
+        },
+        "lease_time_source": {
+          "const": "database_authoritative"
+        }
+      },
+      "required": [
+        "authority",
+        "communication",
+        "acceptance_records",
+        "commit_records",
+        "transaction_mode",
+        "atomicity",
+        "wait_until_is_durable",
+        "memory_is_durable",
+        "optional_wakeup",
+        "projection_reopens_origin_operation",
+        "unknown_commit",
+        "lease_time_source"
+      ],
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "tenant_scope": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "authorization": {
+          "const": "trusted_identity_current_membership_deny_by_default"
+        },
+        "worker_reauthorizes": {
+          "const": true
+        },
+        "parameterized_sql": {
+          "const": true
+        },
+        "public_sdk_contains_database_token": {
+          "const": false
+        },
+        "network_exclusivity": {
+          "const": "not_claimed_by_bearer_token"
+        },
+        "caller_selects_database_endpoint": {
+          "const": false
+        }
+      },
+      "required": [
+        "tenant_scope",
+        "authorization",
+        "worker_reauthorizes",
+        "parameterized_sql",
+        "public_sdk_contains_database_token",
+        "network_exclusivity",
+        "caller_selects_database_endpoint"
+      ],
+      "additionalProperties": false
+    },
+    "activation": {
+      "type": "object",
+      "properties": {
+        "requires": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "requires"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "revision",
+    "project",
+    "status",
+    "implemented",
+    "enabled",
+    "original_specification",
+    "initial_storage",
+    "runtimes",
+    "storage",
+    "buffer",
+    "security",
+    "activation"
+  ],
+  "additionalProperties": false
+}

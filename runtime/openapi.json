@@ -1,0 +1,2869 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "any-rs local durable slice",
+    "version": "0.1.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8080/v2"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/businesses/{business_id}/projects/{project_id}/clients/{client_id}/commands": {
+      "parameters": [
+        {
+          "name": "business_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "project_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "dispatchCommand",
+        "tags": [
+          "Comandos"
+        ],
+        "summary": "Aceptar un comando de dominio",
+        "description": "Local demo.note.create only; authenticated scope, durable acceptance and idempotent replay. No dynamic registry.",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "description": "Clave por \u00e1mbito, principal y ruta; misma solicitud conserva operaci\u00f3n durante la retenci\u00f3n."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CommandInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Comando aceptado de forma durable; consultar su resultado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Accepted"
+                }
+              }
+            },
+            "headers": {
+              "Location": {
+                "description": "Ruta autorizada para consultar la operaci\u00f3n.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Retry-After": {
+                "description": "Segundos propuestos antes de consultar.",
+                "schema": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "409": {
+            "$ref": "#/components/responses/Error409"
+          },
+          "413": {
+            "$ref": "#/components/responses/Error413"
+          },
+          "422": {
+            "$ref": "#/components/responses/Error422"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        }
+      }
+    },
+    "/businesses/{business_id}/projects/{project_id}/clients/{client_id}/operations/{operation_id}": {
+      "parameters": [
+        {
+          "name": "business_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "project_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "operation_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getOperation",
+        "tags": [
+          "Operaciones"
+        ],
+        "summary": "Consultar una operaci\u00f3n de datos",
+        "description": "HTTP 200 incluso para rejected o failed; problem describe el resultado del comando. No se concede acceso solo por conocer el ID.",
+        "responses": {
+          "200": {
+            "description": "Estado y resultado autorizado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Operation"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        }
+      }
+    },
+    "/businesses/{business_id}/projects/{project_id}/clients/{client_id}/demo.note/objects/{id}": {
+      "parameters": [
+        {
+          "name": "business_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "project_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getObject",
+        "tags": [
+          "Lecturas"
+        ],
+        "summary": "Leer estado autoritativo autorizado",
+        "description": "Read an authorized local demo.note. No min_commit/projection behavior is implemented.",
+        "responses": {
+          "200": {
+            "description": "Objeto confirmado.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectDocument"
+                }
+              }
+            },
+            "headers": {
+              "ETag": {
+                "description": "Revisi\u00f3n opaca del objeto.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Por defecto private, no-store."
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/Error400"
+          },
+          "401": {
+            "$ref": "#/components/responses/Error401"
+          },
+          "403": {
+            "$ref": "#/components/responses/Error403"
+          },
+          "404": {
+            "$ref": "#/components/responses/Error404"
+          },
+          "429": {
+            "$ref": "#/components/responses/Error429"
+          },
+          "503": {
+            "$ref": "#/components/responses/Error503"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "Credencial verificada por IdentityProvider. No se conf\u00eda en claims sin validar."
+      }
+    },
+    "responses": {
+      "Error400": {
+        "description": "Solicitud mal formada o campo desconocido.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error401": {
+        "description": "Credencial ausente o inv\u00e1lida.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error403": {
+        "description": "Acci\u00f3n no autorizada en el \u00e1mbito conocido.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error404": {
+        "description": "Recurso ausente o fuera del \u00e1mbito autorizado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error409": {
+        "description": "Conflicto previo a aceptaci\u00f3n: clave idempotente o definici\u00f3n incompatible.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error410": {
+        "description": "Snapshot del cursor retirado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error413": {
+        "description": "Solicitud excede el l\u00edmite.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error422": {
+        "description": "Solicitud sem\u00e1nticamente inv\u00e1lida o capacidad incompatible.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error429": {
+        "description": "Presupuesto de admisi\u00f3n agotado.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      },
+      "Error503": {
+        "description": "Sin aceptaci\u00f3n durable o lectura m\u00ednima a\u00fan no disponible.",
+        "content": {
+          "application/problem+json": {
+            "schema": {
+              "$ref": "#/components/schemas/Problem"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Identifier": {
+        "type": "string",
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$"
+      },
+      "TypeName": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)*$",
+        "maxLength": 128
+      },
+      "FieldName": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$",
+        "maxLength": 128
+      },
+      "Version": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 2147483647
+      },
+      "Revision": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 9007199254740991
+      },
+      "DataScope": {
+        "type": "object",
+        "properties": {
+          "business_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "project_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "client_id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "business_id",
+          "project_id",
+          "client_id"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectScope": {
+        "type": "object",
+        "properties": {
+          "business_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "project_id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "business_id",
+          "project_id"
+        ],
+        "additionalProperties": false
+      },
+      "Scope": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DataScope"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectScope"
+          }
+        ]
+      },
+      "Primitive": {
+        "type": [
+          "string",
+          "integer",
+          "number",
+          "boolean",
+          "null"
+        ]
+      },
+      "ObjectRef": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "Values": {
+        "type": "object",
+        "propertyNames": {
+          "$ref": "#/components/schemas/FieldName"
+        },
+        "additionalProperties": {
+          "oneOf": [
+            {
+              "$ref": "#/components/schemas/Primitive"
+            },
+            {
+              "$ref": "#/components/schemas/ObjectRef"
+            }
+          ]
+        },
+        "maxProperties": 256
+      },
+      "ScalarField": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "string",
+              "integer",
+              "number",
+              "boolean"
+            ]
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "nullable": {
+            "type": "boolean"
+          },
+          "format": {
+            "enum": [
+              "date-time",
+              "date",
+              "decimal",
+              "uuid",
+              "bytes-base64"
+            ]
+          },
+          "min_length": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_length": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minimum": {
+            "type": "number"
+          },
+          "maximum": {
+            "type": "number"
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 512
+          },
+          "one_of": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Primitive"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "type",
+          "required",
+          "nullable"
+        ],
+        "additionalProperties": false
+      },
+      "ReferenceField": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "const": "reference"
+          },
+          "target": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "nullable": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "type",
+          "target",
+          "required",
+          "nullable"
+        ],
+        "additionalProperties": false
+      },
+      "Cardinality": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "min"
+        ],
+        "additionalProperties": false
+      },
+      "Endpoint": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "cardinality": {
+            "$ref": "#/components/schemas/Cardinality"
+          }
+        },
+        "required": [
+          "target",
+          "cardinality"
+        ],
+        "additionalProperties": false
+      },
+      "ValueObjectDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "ValueObject"
+          },
+          "id": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "immutable": {
+            "const": true
+          },
+          "fields": {
+            "type": "object",
+            "minProperties": 1,
+            "maxProperties": 256,
+            "propertyNames": {
+              "$ref": "#/components/schemas/FieldName"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ScalarField"
+            }
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "immutable",
+          "fields"
+        ],
+        "additionalProperties": false
+      },
+      "EntityDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Entity"
+          },
+          "id": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "fields": {
+            "type": "object",
+            "maxProperties": 256,
+            "propertyNames": {
+              "$ref": "#/components/schemas/FieldName"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ReferenceField"
+            }
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "fields"
+        ],
+        "additionalProperties": false
+      },
+      "RelationDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Relation"
+          },
+          "id": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "left": {
+            "$ref": "#/components/schemas/Endpoint"
+          },
+          "right": {
+            "$ref": "#/components/schemas/Endpoint"
+          },
+          "unique_pair": {
+            "const": true
+          },
+          "on_delete": {
+            "const": "restrict"
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "left",
+          "right",
+          "unique_pair",
+          "on_delete"
+        ],
+        "additionalProperties": false
+      },
+      "TypeDefinition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ValueObjectDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/EntityDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/RelationDefinition"
+          }
+        ]
+      },
+      "EventDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Event"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "message_type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]+\\.v[1-9][0-9]*$"
+          },
+          "data_schema": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "retention_days": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "replay_safe": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "message_type",
+          "data_schema",
+          "retention_days",
+          "replay_safe"
+        ],
+        "additionalProperties": false
+      },
+      "CommandDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Command"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "message_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "owner": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "input_schema": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "required_action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "emits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "message_name",
+          "owner",
+          "input_schema",
+          "required_action",
+          "emits"
+        ],
+        "additionalProperties": false
+      },
+      "HandlerDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Handler"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "runtime_entrypoint": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "artifact_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "consumes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "emits": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "required_profile": {
+            "type": "string",
+            "minLength": 1
+          },
+          "service_principal": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "runtime_entrypoint",
+          "artifact_version",
+          "consumes",
+          "emits",
+          "required_profile",
+          "service_principal"
+        ],
+        "additionalProperties": false
+      },
+      "SubscriptionDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Subscription"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "message_types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "handler": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "delivery": {
+            "const": "at_least_once"
+          },
+          "max_attempts": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "lease_ms": {
+            "type": "integer",
+            "minimum": 100
+          },
+          "ordered_by": {
+            "enum": [
+              "aggregate",
+              "none"
+            ]
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "message_types",
+          "handler",
+          "delivery",
+          "max_attempts",
+          "lease_ms",
+          "ordered_by"
+        ],
+        "additionalProperties": false
+      },
+      "Operand": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "enum": [
+                  "principal.id",
+                  "session.scope",
+                  "resource.scope",
+                  "resource.created_by",
+                  "resource.type",
+                  "session.client_id"
+                ]
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "literal": {
+                "type": [
+                  "string",
+                  "number",
+                  "boolean",
+                  "null",
+                  "array"
+                ]
+              }
+            },
+            "required": [
+              "literal"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "Condition": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "enum": [
+                  "eq",
+                  "in"
+                ]
+              },
+              "left": {
+                "$ref": "#/components/schemas/Operand"
+              },
+              "right": {
+                "$ref": "#/components/schemas/Operand"
+              }
+            },
+            "required": [
+              "op",
+              "left",
+              "right"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "same_scope"
+              }
+            },
+            "required": [
+              "op"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "enum": [
+                  "all",
+                  "any"
+                ]
+              },
+              "conditions": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Condition"
+                },
+                "minItems": 1,
+                "maxItems": 128
+              }
+            },
+            "required": [
+              "op",
+              "conditions"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "PolicyRule": {
+        "type": "object",
+        "properties": {
+          "effect": {
+            "enum": [
+              "allow",
+              "deny"
+            ]
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "subject_profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Identifier"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "resource_types": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TypeName"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "condition": {
+            "$ref": "#/components/schemas/Condition"
+          }
+        },
+        "required": [
+          "effect",
+          "actions",
+          "subject_profiles",
+          "condition"
+        ],
+        "additionalProperties": false
+      },
+      "PolicyDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Policy"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "default_effect": {
+            "const": "deny"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PolicyRule"
+            },
+            "minItems": 1,
+            "maxItems": 128
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "default_effect",
+          "rules"
+        ],
+        "additionalProperties": false
+      },
+      "ProfileDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Profile"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "assignment_scope": {
+            "enum": [
+              "business",
+              "project",
+              "client"
+            ]
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "permissions",
+          "assignment_scope"
+        ],
+        "additionalProperties": false
+      },
+      "ViewDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "View"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "renderer": {
+            "enum": [
+              "html-htmx",
+              "headless"
+            ]
+          },
+          "template": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "query": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "$ref": "#/components/schemas/TypeName"
+              },
+              "select": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "minItems": 1
+              },
+              "source": {
+                "enum": [
+                  "authoritative",
+                  "projection"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "select",
+              "source"
+            ],
+            "additionalProperties": false
+          },
+          "actions": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "editable_paths": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^/draft/[^\\s]+$"
+            },
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "renderer",
+          "query",
+          "actions",
+          "editable_paths"
+        ],
+        "additionalProperties": false
+      },
+      "Definition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/TypeDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/EventDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/CommandDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/HandlerDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/SubscriptionDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/PolicyDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/ProfileDefinition"
+          },
+          {
+            "$ref": "#/components/schemas/ViewDefinition"
+          }
+        ]
+      },
+      "EnvRef": {
+        "type": "object",
+        "properties": {
+          "env": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          }
+        },
+        "required": [
+          "env"
+        ],
+        "additionalProperties": false
+      },
+      "Binding": {
+        "type": "object",
+        "properties": {
+          "engine": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "adapter": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "role": {
+            "enum": [
+              "state",
+              "queue",
+              "blob",
+              "projection",
+              "registry"
+            ]
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          },
+          "credentials": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/EnvRef"
+            }
+          }
+        },
+        "required": [
+          "engine",
+          "adapter",
+          "role"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectConfig": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Project"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "scope": {
+            "$ref": "#/components/schemas/ProjectScope"
+          },
+          "authoring": {
+            "type": "object",
+            "properties": {
+              "toml_version": {
+                "const": "1.0.0"
+              },
+              "toon_enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "toml_version",
+              "toon_enabled"
+            ],
+            "additionalProperties": false
+          },
+          "definitions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "bindings": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Binding"
+            }
+          },
+          "limits": {
+            "type": "object",
+            "properties": {
+              "request_bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "event_bytes": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_hops": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "max_attempts": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "idempotency_days": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "cursor_seconds": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "snapshot_seconds": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "request_bytes",
+              "event_bytes",
+              "max_hops",
+              "max_attempts",
+              "idempotency_days",
+              "cursor_seconds",
+              "snapshot_seconds"
+            ],
+            "additionalProperties": false
+          },
+          "required_profiles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "scope",
+          "authoring",
+          "definitions",
+          "bindings",
+          "limits",
+          "required_profiles"
+        ],
+        "additionalProperties": false
+      },
+      "EngineDefinition": {
+        "type": "object",
+        "properties": {
+          "api_version": {
+            "const": "framework/v1alpha1"
+          },
+          "kind": {
+            "const": "Engine"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "driver": {
+            "type": "string",
+            "minLength": 1
+          },
+          "certification": {
+            "enum": [
+              "proposed",
+              "conformant"
+            ]
+          },
+          "capabilities": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "transaction_scope": {
+            "enum": [
+              "client_scope",
+              "project_scope",
+              "same_database"
+            ]
+          },
+          "external_state": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "api_version",
+          "kind",
+          "id",
+          "version",
+          "driver",
+          "certification",
+          "capabilities",
+          "transaction_scope",
+          "external_state"
+        ],
+        "additionalProperties": false
+      },
+      "Business": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "Client": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "business_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "id",
+          "business_id",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "Principal": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "kind": {
+            "enum": [
+              "user",
+              "service"
+            ]
+          },
+          "status": {
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "Membership": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "principal_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "business_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "project_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Identifier"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "client_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Identifier"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "profiles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Identifier"
+            },
+            "minItems": 1,
+            "uniqueItems": true
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "status": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "principal_id",
+          "business_id",
+          "project_ids",
+          "client_ids",
+          "profiles",
+          "revision",
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "PublicSession": {
+        "type": "object",
+        "properties": {
+          "principal": {
+            "$ref": "#/components/schemas/Principal"
+          },
+          "membership_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "active_scope": {
+            "$ref": "#/components/schemas/DataScope"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "policy_revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "membership_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "principal",
+          "membership_id",
+          "active_scope",
+          "expires_at",
+          "policy_revision",
+          "membership_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ViewModel": {
+        "type": "object",
+        "properties": {
+          "view_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "status": {
+            "enum": [
+              "clean",
+              "editing",
+              "submitting",
+              "pending",
+              "synced",
+              "invalid",
+              "conflict",
+              "failed"
+            ]
+          },
+          "data": {
+            "type": "object"
+          },
+          "draft": {
+            "type": "object"
+          },
+          "errors": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "pending_operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Identifier"
+            },
+            "uniqueItems": true
+          },
+          "dirty": {
+            "type": "boolean"
+          },
+          "base_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "view_id",
+          "status",
+          "data",
+          "draft",
+          "errors",
+          "pending_operations",
+          "dirty"
+        ],
+        "additionalProperties": false
+      },
+      "CommandInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "version",
+          "payload"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "const": "demo.note.create"
+          },
+          "version": {
+            "const": 1
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "text"
+            ],
+            "properties": {
+              "id": {
+                "$ref": "#/components/schemas/Identifier"
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Runtime further limits UTF-8 encoded text to 4096 bytes."
+              }
+            }
+          }
+        }
+      },
+      "CreateObjectInput": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/TypeDefinition"
+          }
+        },
+        "required": [
+          "schema_version",
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "UpdateObjectInput": {
+        "type": "object",
+        "properties": {
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          },
+          "expected_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "schema_version",
+          "values",
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "DeleteObjectInput": {
+        "type": "object",
+        "properties": {
+          "expected_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "expected_revision"
+        ],
+        "additionalProperties": false
+      },
+      "ReleaseInput": {
+        "type": "object",
+        "properties": {
+          "release_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "expected_registry_revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Definition"
+            },
+            "minItems": 1,
+            "maxItems": 1000
+          }
+        },
+        "required": [
+          "release_id",
+          "expected_registry_revision",
+          "documents"
+        ],
+        "additionalProperties": false
+      },
+      "CreateObjectPayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          },
+          "schema": {
+            "$ref": "#/components/schemas/TypeDefinition"
+          }
+        },
+        "required": [
+          "type",
+          "schema_version",
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "UpdateObjectPayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          }
+        },
+        "required": [
+          "type",
+          "id",
+          "schema_version",
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "DeleteObjectPayload": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "type",
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "Command": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "const": "command"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "principal_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "operation_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "correlation_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "release_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deadline": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "hop_count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16
+          },
+          "payload": {
+            "type": "object"
+          },
+          "expected_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "kind",
+          "id",
+          "source",
+          "name",
+          "version",
+          "scope",
+          "principal_id",
+          "operation_id",
+          "correlation_id",
+          "release_id",
+          "accepted_at",
+          "deadline",
+          "hop_count",
+          "payload"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "name": {
+                  "const": "core.object.create"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/CreateObjectPayload"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "name": {
+                  "const": "core.object.update"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/UpdateObjectPayload"
+                }
+              },
+              "required": [
+                "expected_revision"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "name": {
+                  "const": "core.object.delete"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "payload": {
+                  "$ref": "#/components/schemas/DeleteObjectPayload"
+                }
+              },
+              "required": [
+                "expected_revision"
+              ]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "name": {
+                  "const": "core.definition.release.publish"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "$ref": "#/components/schemas/ProjectScope"
+                },
+                "payload": {
+                  "$ref": "#/components/schemas/ReleaseInput"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "name": {
+                  "enum": [
+                    "core.object.create",
+                    "core.object.update",
+                    "core.object.delete"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "scope": {
+                  "$ref": "#/components/schemas/DataScope"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "Event": {
+        "type": "object",
+        "properties": {
+          "specversion": {
+            "const": "1.0"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "source": {
+            "type": "string",
+            "format": "uri"
+          },
+          "type": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_.]+\\.v[1-9][0-9]*$"
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "datacontenttype": {
+            "const": "application/json"
+          },
+          "data": {
+            "type": "object"
+          },
+          "businessid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "projectid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "clientid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "operationid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "correlationid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "causationid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "aggregateversion": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "releaseid": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "hopcount": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 16
+          }
+        },
+        "required": [
+          "specversion",
+          "id",
+          "source",
+          "type",
+          "subject",
+          "time",
+          "datacontenttype",
+          "data",
+          "businessid",
+          "projectid",
+          "operationid",
+          "correlationid",
+          "causationid",
+          "aggregateversion",
+          "releaseid",
+          "hopcount"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "enum": [
+                    "dev.framework.object.created.v1",
+                    "dev.framework.object.updated.v1"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "clientid"
+              ],
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ObjectCreatedData"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "dev.framework.object.deleted.v1"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "clientid"
+              ],
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ObjectDeletedData"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "dev.framework.definition.published.v1"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/DefinitionPublishedData"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "dev.framework.projection.updated.v1"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "clientid"
+              ],
+              "properties": {
+                "data": {
+                  "$ref": "#/components/schemas/ProjectionUpdatedData"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ResourceResult": {
+        "type": "object",
+        "properties": {
+          "commit_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectRef"
+            }
+          },
+          "registry_revision": {
+            "$ref": "#/components/schemas/Revision"
+          }
+        },
+        "required": [
+          "commit_id"
+        ],
+        "additionalProperties": false
+      },
+      "Problem": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "format": "uri"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "integer",
+            "minimum": 400,
+            "maximum": 599
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "request_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "detail": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "status",
+          "code",
+          "request_id"
+        ],
+        "additionalProperties": false
+      },
+      "Operation": {
+        "type": "object",
+        "properties": {
+          "operation_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/Scope"
+          },
+          "command_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "running",
+              "retrying",
+              "succeeded",
+              "rejected",
+              "failed",
+              "expired"
+            ]
+          },
+          "accepted_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "result": {
+            "$ref": "#/components/schemas/ResourceResult"
+          },
+          "problem": {
+            "$ref": "#/components/schemas/Problem"
+          }
+        },
+        "required": [
+          "operation_id",
+          "scope",
+          "command_name",
+          "status",
+          "accepted_at",
+          "updated_at"
+        ],
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "const": "succeeded"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "result"
+              ],
+              "not": {
+                "required": [
+                  "problem"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "rejected",
+                    "failed",
+                    "expired"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "problem"
+              ],
+              "not": {
+                "required": [
+                  "result"
+                ]
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "status": {
+                  "enum": [
+                    "accepted",
+                    "running",
+                    "retrying"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "not": {
+                "anyOf": [
+                  {
+                    "required": [
+                      "result"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "problem"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Accepted": {
+        "type": "object",
+        "properties": {
+          "operation_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "running",
+              "retrying",
+              "succeeded",
+              "rejected",
+              "failed",
+              "expired"
+            ]
+          },
+          "operation_url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "operation_id",
+          "status",
+          "operation_url"
+        ],
+        "additionalProperties": false,
+        "description": "Una reentrega idempotente puede devolver la operaci\u00f3n ya terminal; 202 no declara \u00e9xito de dominio."
+      },
+      "ObjectDocument": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/DataScope"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          },
+          "commit_id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "scope",
+          "type",
+          "id",
+          "schema_version",
+          "revision",
+          "values",
+          "commit_id"
+        ],
+        "additionalProperties": false
+      },
+      "Predicate": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "enum": [
+                  "eq",
+                  "lt",
+                  "lte",
+                  "gt",
+                  "gte"
+                ]
+              },
+              "field": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "value": {
+                "$ref": "#/components/schemas/Primitive"
+              }
+            },
+            "required": [
+              "op",
+              "field",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "const": "in"
+              },
+              "field": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "values": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Primitive"
+                },
+                "minItems": 1,
+                "maxItems": 1000
+              }
+            },
+            "required": [
+              "op",
+              "field",
+              "values"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "op": {
+                "enum": [
+                  "and",
+                  "or"
+                ]
+              },
+              "terms": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Predicate"
+                },
+                "minItems": 1,
+                "maxItems": 128
+              }
+            },
+            "required": [
+              "op",
+              "terms"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "QueryInput": {
+        "type": "object",
+        "properties": {
+          "select": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "minItems": 1,
+            "maxItems": 256,
+            "uniqueItems": true
+          },
+          "source": {
+            "enum": [
+              "authoritative",
+              "projection"
+            ]
+          },
+          "where": {
+            "$ref": "#/components/schemas/Predicate"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "min_commit": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "select",
+          "source",
+          "limit"
+        ],
+        "additionalProperties": false
+      },
+      "QueryResult": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "$ref": "#/components/schemas/DataScope"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TypeName"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "maxItems": 1000
+          },
+          "source": {
+            "enum": [
+              "authoritative",
+              "projection"
+            ]
+          },
+          "freshness": {
+            "enum": [
+              "current",
+              "lagging"
+            ]
+          },
+          "watermark": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 8192
+          }
+        },
+        "required": [
+          "scope",
+          "type",
+          "items",
+          "source",
+          "freshness",
+          "watermark",
+          "next_cursor"
+        ],
+        "additionalProperties": false
+      },
+      "ObjectCreatedData": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ObjectRef"
+          },
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "commit_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "values": {
+            "$ref": "#/components/schemas/Values"
+          },
+          "deleted": {
+            "const": false
+          }
+        },
+        "required": [
+          "resource",
+          "schema_version",
+          "revision",
+          "commit_id",
+          "values",
+          "deleted"
+        ],
+        "additionalProperties": false
+      },
+      "ObjectDeletedData": {
+        "type": "object",
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/ObjectRef"
+          },
+          "schema_version": {
+            "$ref": "#/components/schemas/Version"
+          },
+          "revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "commit_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "deleted": {
+            "const": true
+          }
+        },
+        "required": [
+          "resource",
+          "schema_version",
+          "revision",
+          "commit_id",
+          "deleted"
+        ],
+        "additionalProperties": false
+      },
+      "ProjectionUpdatedData": {
+        "type": "object",
+        "properties": {
+          "view_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "generation": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "watermark": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "view_id",
+          "generation",
+          "watermark"
+        ],
+        "additionalProperties": false
+      },
+      "DefinitionPublishedData": {
+        "type": "object",
+        "properties": {
+          "release_id": {
+            "$ref": "#/components/schemas/Identifier"
+          },
+          "registry_revision": {
+            "$ref": "#/components/schemas/Revision"
+          },
+          "commit_id": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        "required": [
+          "release_id",
+          "registry_revision",
+          "commit_id"
+        ],
+        "additionalProperties": false
+      },
+      "VersionInfo": {
+        "type": "object",
+        "properties": {
+          "specification": {
+            "const": "0.1.0-draft.1"
+          },
+          "language": {
+            "const": "framework/v1alpha1"
+          },
+          "http_api": {
+            "const": "v2"
+          }
+        },
+        "required": [
+          "specification",
+          "language",
+          "http_api"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "x-any-rs": {
+    "profile": "sqlite-local",
+    "cloud_adapters_implemented": false,
+    "authentication": "startup-only static scoped grants",
+    "outbox_delivery": false
+  }
+}

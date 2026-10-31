@@ -1,0 +1,605 @@
+openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: 'My freamework: API propuesta por eventos'
+  version: 0.1.0-draft.1
+  description: Contrato de diseño; sin servicio desplegado. Mutaciones asíncronas, datos aislados por negocio/proyecto/cliente,
+    esquemas dinámicos y operaciones consultables. Incompatible en tiempos y rutas con el antecedente /v1. Los esquemas
+    JSON solo validan estructura; el registro y el commit validan dominio y permisos.
+servers:
+- url: https://api.example.invalid/v2
+  description: URL ilustrativa; no es un servicio operativo.
+security:
+- BearerAuth: []
+tags:
+- name: Comandos
+- name: Lecturas
+- name: Operaciones
+- name: Sesión
+- name: Sistema
+paths:
+  /businesses/{business_id}/projects/{project_id}/clients/{client_id}/commands:
+    parameters:
+    - &id001
+      name: business_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    - &id002
+      name: project_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    - &id003
+      name: client_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    post:
+      operationId: dispatchCommand
+      tags:
+      - Comandos
+      summary: Aceptar un comando de dominio
+      description: El gateway inyecta principal, ámbito, identificadores, release y deadline. El body no puede conceder
+        permisos. El nombre debe estar instalado en el release.
+      parameters:
+      - &id004
+        name: Idempotency-Key
+        in: header
+        required: true
+        schema:
+          type: string
+          minLength: 1
+          maxLength: 128
+        description: Clave por ámbito, principal y ruta; misma solicitud conserva operación durante la retención.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/CommandInput
+      responses:
+        '202':
+          description: Comando aceptado de forma durable; consultar su resultado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Accepted
+          headers: &id005
+            Location:
+              description: Ruta autorizada para consultar la operación.
+              schema:
+                type: string
+            Retry-After:
+              description: Segundos propuestos antes de consultar.
+              schema:
+                type: integer
+                minimum: 0
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '409':
+          $ref: '#/components/responses/Error409'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/clients/{client_id}/{type}/objects:
+    parameters:
+    - *id001
+    - *id002
+    - *id003
+    - name: type
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/TypeName
+    post:
+      operationId: createObject
+      tags:
+      - Comandos
+      summary: Crear un objeto mediante comando
+      description: Se convierte en core.object.create. Un tipo desconocido exige schema explícito y permiso; registro
+        más inserción requieren registry_data_atomic. No se infiere esquema. El conflicto de negocio posterior aparece
+        en la operación.
+      parameters:
+      - *id004
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/CreateObjectInput
+      responses:
+        '202':
+          description: Comando aceptado de forma durable; consultar su resultado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Accepted
+          headers: *id005
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '409':
+          $ref: '#/components/responses/Error409'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/clients/{client_id}/{type}/objects/{id}:
+    parameters:
+    - *id001
+    - *id002
+    - *id003
+    - name: type
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/TypeName
+    - name: id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    get:
+      operationId: getObject
+      tags:
+      - Lecturas
+      summary: Leer estado autoritativo autorizado
+      description: La autorización es actual aunque el dato provenga de un snapshot. min_commit pertenece al mismo
+        ámbito. No expande referencias.
+      parameters:
+      - name: min_commit
+        in: query
+        required: false
+        schema:
+          $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+      responses:
+        '200':
+          description: Objeto confirmado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/ObjectDocument
+          headers:
+            ETag:
+              description: Revisión opaca del objeto.
+              schema:
+                type: string
+            Cache-Control:
+              schema:
+                type: string
+              description: Por defecto private, no-store.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+    patch:
+      operationId: updateObject
+      tags:
+      - Comandos
+      summary: Actualizar referencias o relación mutable
+      description: Comando core.object.update. expected_revision es obligatorio. Los valores omitidos se conservan;
+        null asigna un nulo autorizado. Los ValueObjects son inmutables.
+      parameters:
+      - *id004
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/UpdateObjectInput
+      responses:
+        '202':
+          description: Comando aceptado de forma durable; consultar su resultado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Accepted
+          headers: *id005
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '409':
+          $ref: '#/components/responses/Error409'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+    delete:
+      operationId: deleteObject
+      tags:
+      - Comandos
+      summary: Solicitar tombstone con revisión
+      description: Comando core.object.delete. El cuerpo contiene expected_revision. El SDK debe enviarlo; si un
+        intermediario no soporta cuerpo DELETE, usar el comando genérico. Referencias entrantes bloquean con restrict.
+      parameters:
+      - *id004
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/DeleteObjectInput
+      responses:
+        '202':
+          description: Comando aceptado de forma durable; consultar su resultado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Accepted
+          headers: *id005
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '409':
+          $ref: '#/components/responses/Error409'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/clients/{client_id}/{type}/query:
+    parameters:
+    - *id001
+    - *id002
+    - *id003
+    - name: type
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/TypeName
+    post:
+      operationId: queryObjects
+      tags:
+      - Lecturas
+      summary: Consultar sin mutar datos de dominio
+      description: POST por tamaño del filtro. Los campos y expansiones se validan contra el release y permisos.
+        Sin orden explícito en v0.1, el core pagina por id ascendente estable en snapshot. Un cursor fija ámbito,
+        consulta y fuente. min_commit exige alcanzar el watermark o responder 503.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/QueryInput
+      responses:
+        '200':
+          description: Página de lectura y watermark.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/QueryResult
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '410':
+          $ref: '#/components/responses/Error410'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/clients/{client_id}/operations/{operation_id}:
+    parameters:
+    - *id001
+    - *id002
+    - *id003
+    - name: operation_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    get:
+      operationId: getOperation
+      tags:
+      - Operaciones
+      summary: Consultar una operación de datos
+      description: HTTP 200 incluso para rejected o failed; problem describe el resultado del comando. No se concede
+        acceso solo por conocer el ID.
+      responses:
+        '200':
+          description: Estado y resultado autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Operation
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/definitions/releases:
+    parameters:
+    - *id001
+    - *id002
+    post:
+      operationId: publishDefinitionRelease
+      tags:
+      - Comandos
+      summary: Publicar un release coherente de definiciones
+      description: Comando core.definition.release.publish con ámbito de proyecto. El worker verifica permisos y
+        expected_registry_revision antes del commit. No se aceptan documentos de motores ni credenciales por esta
+        ruta.
+      parameters:
+      - *id004
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: ../schemas/contracts.schema.json#/$defs/ReleaseInput
+      responses:
+        '202':
+          description: Comando aceptado de forma durable; consultar su resultado.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Accepted
+          headers: *id005
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '409':
+          $ref: '#/components/responses/Error409'
+        '413':
+          $ref: '#/components/responses/Error413'
+        '422':
+          $ref: '#/components/responses/Error422'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/definitions/{definition_id}:
+    parameters:
+    - *id001
+    - *id002
+    - name: definition_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    get:
+      operationId: getDefinition
+      tags:
+      - Lecturas
+      summary: Leer una definición autorizada y versionada
+      description: Requiere definition.read y permisos adicionales según el kind. Los bindings de motores y credenciales
+        no están en este registro. version omitida selecciona la vigente en un release coherente.
+      parameters:
+      - name: version
+        in: query
+        required: false
+        schema:
+          $ref: ../schemas/contracts.schema.json#/$defs/Version
+      responses:
+        '200':
+          description: Definición autorizada; sin secretos.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Definition
+          headers:
+            X-Release-Id:
+              schema:
+                type: string
+              description: Release que contiene la versión leída.
+        '400':
+          $ref: '#/components/responses/Error400'
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /businesses/{business_id}/projects/{project_id}/operations/{operation_id}:
+    parameters:
+    - *id001
+    - *id002
+    - name: operation_id
+      in: path
+      required: true
+      schema:
+        $ref: ../schemas/contracts.schema.json#/$defs/Identifier
+    get:
+      operationId: getProjectOperation
+      tags:
+      - Operaciones
+      summary: Consultar publicación administrativa de proyecto
+      responses:
+        '200':
+          description: Operación administrativa autorizada.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/Operation
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '404':
+          $ref: '#/components/responses/Error404'
+        '429':
+          $ref: '#/components/responses/Error429'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /session:
+    get:
+      operationId: getSession
+      tags:
+      - Sesión
+      summary: Leer contexto público de la sesión
+      description: El ámbito activo se verifica desde la sesión autenticada. Si el adaptador bearer no mantiene
+        ámbito activo, el cliente establece el contexto mediante su proveedor de sesión, fuera del protocolo de
+        dominio.
+      responses:
+        '200':
+          description: Contexto público sin credenciales.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/PublicSession
+        '401':
+          $ref: '#/components/responses/Error401'
+        '403':
+          $ref: '#/components/responses/Error403'
+        '503':
+          $ref: '#/components/responses/Error503'
+  /version:
+    get:
+      operationId: getVersion
+      tags:
+      - Sistema
+      summary: Leer versiones del contrato
+      security: []
+      responses:
+        '200':
+          description: Versión propuesta.
+          content:
+            application/json:
+              schema:
+                $ref: ../schemas/contracts.schema.json#/$defs/VersionInfo
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: Credencial verificada por IdentityProvider. No se confía en claims sin validar.
+  responses:
+    Error400:
+      description: Solicitud mal formada o campo desconocido.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error401:
+      description: Credencial ausente o inválida.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error403:
+      description: Acción no autorizada en el ámbito conocido.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error404:
+      description: Recurso ausente o fuera del ámbito autorizado.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error409:
+      description: 'Conflicto previo a aceptación: clave idempotente o definición incompatible.'
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error410:
+      description: Snapshot del cursor retirado.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error413:
+      description: Solicitud excede el límite.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error422:
+      description: Solicitud semánticamente inválida o capacidad incompatible.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error429:
+      description: Presupuesto de admisión agotado.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+    Error503:
+      description: Sin aceptación durable o lectura mínima aún no disponible.
+      content:
+        application/problem+json:
+          schema:
+            $ref: ../schemas/contracts.schema.json#/$defs/Problem
+x-framework:
+  specification: 0.1.0-draft.1
+  implemented: false
+  delivery: at_least_once
+  command_acceptance: durable
+  domain_success: operation.status=succeeded
+  commit_profile: durable_async
+  frontend_renderer_required: false

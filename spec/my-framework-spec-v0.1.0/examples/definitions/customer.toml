@@ -1,0 +1,10 @@
+api_version = "framework/v1alpha1"
+kind = "Entity"
+id = "sales.customer"
+version = 1
+
+[fields.name]
+type = "reference"
+target = "core.display_name"
+required = true
+nullable = false

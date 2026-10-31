@@ -1,0 +1,9 @@
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.05s
+     Running unittests src/main.rs (target/debug/deps/any_rs_local-4666194cf51f6d5c)
+
+running 2 tests
+test domain::tests::commands_are_explicit_and_closed ... ok
+test domain::tests::identifiers_are_bounded_and_not_paths ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

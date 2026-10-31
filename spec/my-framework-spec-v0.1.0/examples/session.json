@@ -1,0 +1,16 @@
+{
+  "principal": {
+    "id": "user_matias",
+    "kind": "user",
+    "status": "active"
+  },
+  "membership_id": "member_demo",
+  "active_scope": {
+    "business_id": "biz_demo",
+    "project_id": "sales",
+    "client_id": "client_acme"
+  },
+  "expires_at": "2026-10-22T18:00:00Z",
+  "policy_revision": 1,
+  "membership_revision": 1
+}

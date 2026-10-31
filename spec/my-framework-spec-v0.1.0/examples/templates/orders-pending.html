@@ -1,0 +1,8 @@
+<!-- El BFF devuelve este fragmento como 200 text/html tras aceptar el comando. -->
+<section id="orders-view" aria-live="polite"
+         hx-get="{{ operation_poll_url }}" hx-trigger="every 1s" hx-swap="outerHTML">
+  <h1>Pedidos</h1>
+  <p>El pedido está pendiente de confirmación.</p>
+  <p>Operación: {{ operation_id }}</p>
+</section>
+<!-- Al terminar, el BFF devuelve orders.html o un fragmento de error sin hx-trigger periódico. -->
