@@ -1,0 +1,10 @@
+test_auth_and_tenant_scope (__main__.DashboardHTTP.test_auth_and_tenant_scope) ... ok
+test_authenticated_html_and_generated_markdown (__main__.DashboardHTTP.test_authenticated_html_and_generated_markdown) ... ok
+test_note_payload_not_injected_into_views (__main__.DashboardHTTP.test_note_payload_not_injected_into_views) ... ok
+test_views_do_not_expose_fixture_secrets (__main__.DashboardHTTP.test_views_do_not_expose_fixture_secrets) ... ok
+test_html_and_markdown_through_invocation_adapter (__main__.DashboardLambda.test_html_and_markdown_through_invocation_adapter) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.205s
+
+OK

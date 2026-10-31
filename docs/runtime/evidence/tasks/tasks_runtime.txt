@@ -1,0 +1,11 @@
+test_authorization_and_note_compatibility (__main__.TasksRuntime.test_authorization_and_note_compatibility) ... ok
+test_deny_default_and_guards_before_acceptance (__main__.TasksRuntime.test_deny_default_and_guards_before_acceptance) ... ok
+test_full_lifecycle_and_terminal_rejection (__main__.TasksRuntime.test_full_lifecycle_and_terminal_rejection) ... ok
+test_idempotency_and_concurrent_revision (__main__.TasksRuntime.test_idempotency_and_concurrent_revision) ... ok
+test_invalid_transition_stale_and_missing (__main__.TasksRuntime.test_invalid_transition_stale_and_missing) ... ok
+test_outbox_failure_rolls_back_all_task_mutations (__main__.TasksRuntime.test_outbox_failure_rolls_back_all_task_mutations) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.836s
+
+OK

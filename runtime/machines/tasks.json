@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "id": "tasks.lifecycle",
+  "collection": "tasks.task",
+  "initial_state": "pending",
+  "states": [
+    "pending",
+    "in_progress",
+    "completed"
+  ],
+  "state_labels": {
+    "pending": "Pendiente",
+    "in_progress": "En progreso",
+    "completed": "Completada"
+  },
+  "terminal_states": [
+    "completed"
+  ],
+  "transitions": [
+    {
+      "from": "pending",
+      "event": "tasks.start",
+      "to": "in_progress",
+      "guards": [
+        {
+          "kind": "valid_identifier",
+          "field": "input.id"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "set_state",
+          "state": "in_progress"
+        },
+        {
+          "kind": "emit_event",
+          "event_name": "tasks.task.started"
+        }
+      ]
+    },
+    {
+      "from": "in_progress",
+      "event": "tasks.complete",
+      "to": "completed",
+      "guards": [
+        {
+          "kind": "valid_identifier",
+          "field": "input.id"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "set_state",
+          "state": "completed"
+        },
+        {
+          "kind": "emit_event",
+          "event_name": "tasks.task.completed"
+        }
+      ]
+    }
+  ],
+  "creation": {
+    "event": "tasks.create",
+    "initial_state": "pending",
+    "actions": [
+      {
+        "kind": "create_object",
+        "object_type": "tasks.task"
+      },
+      {
+        "kind": "emit_event",
+        "event_name": "tasks.task.created"
+      }
+    ]
+  }
+}

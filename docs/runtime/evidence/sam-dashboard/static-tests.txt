@@ -1,0 +1,57 @@
+test_acceptance_requires_all_records (test_adapter_contracts.AdapterContractTests.test_acceptance_requires_all_records) ... ok
+test_acceptance_traceability (test_adapter_contracts.AdapterContractTests.test_acceptance_traceability) ... ok
+test_bearer_not_network_acl (test_adapter_contracts.AdapterContractTests.test_bearer_not_network_acl) ... ok
+test_blob_cannot_guess_hosted_limits (test_adapter_contracts.AdapterContractTests.test_blob_cannot_guess_hosted_limits) ... ok
+test_blob_cannot_merge_durable_and_applied_ack (test_adapter_contracts.AdapterContractTests.test_blob_cannot_merge_durable_and_applied_ack) ... ok
+test_blob_experiment_cannot_claim_activation_or_free_bypass (test_adapter_contracts.AdapterContractTests.test_blob_experiment_cannot_claim_activation_or_free_bypass) ... ok
+test_blob_gates_cannot_be_removed (test_adapter_contracts.AdapterContractTests.test_blob_gates_cannot_be_removed) ... ok
+test_blob_requires_durable_log_and_snapshot_checkpoint (test_adapter_contracts.AdapterContractTests.test_blob_requires_durable_log_and_snapshot_checkpoint) ... ok
+test_blob_requires_remote_fencing (test_adapter_contracts.AdapterContractTests.test_blob_requires_remote_fencing) ... ok
+test_browser_memory_cannot_be_server_authority (test_adapter_contracts.AdapterContractTests.test_browser_memory_cannot_be_server_authority) ... ok
+test_browser_wasm_not_worker_wasm (test_adapter_contracts.AdapterContractTests.test_browser_wasm_not_worker_wasm) ... ok
+test_caller_cannot_choose_endpoint (test_adapter_contracts.AdapterContractTests.test_caller_cannot_choose_endpoint) ... ok
+test_commit_requires_all_records (test_adapter_contracts.AdapterContractTests.test_commit_requires_all_records) ... ok
+test_container_requires_verified_architecture (test_adapter_contracts.AdapterContractTests.test_container_requires_verified_architecture) ... ok
+test_full_tenant_scope (test_adapter_contracts.AdapterContractTests.test_full_tenant_scope) ... ok
+test_hybrid_profile_cannot_be_omitted (test_adapter_contracts.AdapterContractTests.test_hybrid_profile_cannot_be_omitted) ... ok
+test_literal_database_secret_rejected (test_adapter_contracts.AdapterContractTests.test_literal_database_secret_rejected) ... ok
+test_live_gates_cannot_be_removed (test_adapter_contracts.AdapterContractTests.test_live_gates_cannot_be_removed) ... ok
+test_local_sync_is_not_server_acceptance (test_adapter_contracts.AdapterContractTests.test_local_sync_is_not_server_acceptance) ... ok
+test_memory_not_durable (test_adapter_contracts.AdapterContractTests.test_memory_not_durable) ... ok
+test_native_client_not_assumed_in_workers (test_adapter_contracts.AdapterContractTests.test_native_client_not_assumed_in_workers) ... ok
+test_no_browser_database_token (test_adapter_contracts.AdapterContractTests.test_no_browser_database_token) ... ok
+test_no_direct_application_calls (test_adapter_contracts.AdapterContractTests.test_no_direct_application_calls) ... ok
+test_no_early_activation_or_certification (test_adapter_contracts.AdapterContractTests.test_no_early_activation_or_certification) ... ok
+test_no_unsupported_indexeddb_claim (test_adapter_contracts.AdapterContractTests.test_no_unsupported_indexeddb_claim) ... ok
+test_nonsync_local_commit_is_not_server_acceptance (test_adapter_contracts.AdapterContractTests.test_nonsync_local_commit_is_not_server_acceptance) ... ok
+test_parameterized_sql_is_required (test_adapter_contracts.AdapterContractTests.test_parameterized_sql_is_required) ... ok
+test_plan_not_core_constant_or_account_entitlement (test_adapter_contracts.AdapterContractTests.test_plan_not_core_constant_or_account_entitlement) ... ok
+test_profiles_are_distinct (test_adapter_contracts.AdapterContractTests.test_profiles_are_distinct) ... ok
+test_projection_cannot_reopen_origin (test_adapter_contracts.AdapterContractTests.test_projection_cannot_reopen_origin) ... ok
+test_provider_allowance_requires_new_dated_evidence (test_adapter_contracts.AdapterContractTests.test_provider_allowance_requires_new_dated_evidence) ... ok
+test_rows_are_not_requests_or_bytes (test_adapter_contracts.AdapterContractTests.test_rows_are_not_requests_or_bytes) ... ok
+test_scenarios_cannot_claim_live_execution (test_adapter_contracts.AdapterContractTests.test_scenarios_cannot_claim_live_execution) ... ok
+test_supported_proposals_pass (test_adapter_contracts.AdapterContractTests.test_supported_proposals_pass) ... ok
+test_token_and_url_have_distinct_references (test_adapter_contracts.AdapterContractTests.test_token_and_url_have_distinct_references) ... ok
+test_turso_engine_is_not_libsql (test_adapter_contracts.AdapterContractTests.test_turso_engine_is_not_libsql) ... ok
+test_unknown_commit_requires_reconciliation (test_adapter_contracts.AdapterContractTests.test_unknown_commit_requires_reconciliation) ... ok
+test_wait_until_not_durable (test_adapter_contracts.AdapterContractTests.test_wait_until_not_durable) ... ok
+test_worker_cannot_be_container_artifact (test_adapter_contracts.AdapterContractTests.test_worker_cannot_be_container_artifact) ... ok
+test_altered_manifest_is_rejected (test_repository_validator.RepositoryValidationTests.test_altered_manifest_is_rejected) ... ok
+test_broken_document_link_is_rejected (test_repository_validator.RepositoryValidationTests.test_broken_document_link_is_rejected) ... ok
+test_changed_extracted_contract_is_rejected (test_repository_validator.RepositoryValidationTests.test_changed_extracted_contract_is_rejected) ... ok
+test_changed_license_is_rejected (test_repository_validator.RepositoryValidationTests.test_changed_license_is_rejected) ... ok
+test_changed_original_artifact_is_rejected (test_repository_validator.RepositoryValidationTests.test_changed_original_artifact_is_rejected) ... ok
+test_license_and_document_links_pass (test_repository_validator.RepositoryValidationTests.test_license_and_document_links_pass) ... ok
+test_missing_extracted_file_is_rejected (test_repository_validator.RepositoryValidationTests.test_missing_extracted_file_is_rejected) ... ok
+test_original_failure_is_not_hidden (test_repository_validator.RepositoryValidationTests.test_original_failure_is_not_hidden) ... ok
+test_original_nonpassing_report_is_rejected (test_repository_validator.RepositoryValidationTests.test_original_nonpassing_report_is_rejected) ... ok
+test_original_process_uses_package_directory_and_current_python (test_repository_validator.RepositoryValidationTests.test_original_process_uses_package_directory_and_current_python) ... ok
+test_original_sources_are_preserved (test_repository_validator.RepositoryValidationTests.test_original_sources_are_preserved) ... ok
+test_symlinked_imported_file_is_rejected (test_repository_validator.RepositoryValidationTests.test_symlinked_imported_file_is_rejected) ... ok
+test_unexpected_imported_file_is_rejected (test_repository_validator.RepositoryValidationTests.test_unexpected_imported_file_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 0.519s
+
+OK

@@ -9,6 +9,27 @@ The bounded fixture runtime is implemented; the general framework, SDK, compiler
 and cloud adapters are not implemented or certified. The owner selected the public project name **any-rs** on 2026-10-23.
 Historical Spanish artifacts remain unchanged.
 
+## Declarative tasks state machine
+
+The [bounded tasks slice](docs/runtime/TASKS.md) runs a neutral, typed FSM object
+in Rust: pending → in_progress → completed, with two explicit transitions and
+deny-by-default behavior. JSON/TOML parity, CAS and atomic event persistence are
+tested. Authoring/client SDKs and gRPC remain planned, not implemented.
+
+## Runtime dashboard and SAM local preparation
+
+The authenticated [runtime dashboard](docs/runtime/DASHBOARD.md) generates HTML,
+Markdown and Mermaid from the compiled OpenAPI contract.
+[SAM local instructions](docs/adapters/AWS-SAM.md) prepare the same adapters for
+Docker-based tests; native tests do not certify SAM/container execution.
+
+## AWS Lambda invocation adapter
+
+An additive [HTTP API v2 / SQS invocation profile](docs/adapters/AWS-LAMBDA.md)
+can be exercised locally with synthetic events. AWS persistence, SQS transport,
+production auth and deployment remain unimplemented. The original local runtime
+is preserved.
+
 ## Workers, Containers and Turso increment
 
 An additive [adapter contract and test-preparation package](docs/adapters/WORKERS-CONTAINERS-TURSO.md)

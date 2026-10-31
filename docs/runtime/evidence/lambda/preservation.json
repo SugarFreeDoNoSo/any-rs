@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "source_artifacts_verified": 2,
+  "imported_files_verified": 51,
+  "license": "AGPL-3.0-only",
+  "repository_document_links": 39,
+  "original_validator": {
+    "status": "pass",
+    "schema_definitions": 63,
+    "toml_files": 18,
+    "json_files": 17,
+    "yaml_files": 1,
+    "positive_instances": 31,
+    "negative_structural_instances": 14,
+    "negative_semantic_instances": 5,
+    "resolved_references": 321,
+    "api_paths": 10,
+    "http_operations": 12,
+    "requirements": 30,
+    "specified_scenarios": 30,
+    "local_links": 16,
+    "openapi_validation": "passed",
+    "runtime_scenarios_executed": 0,
+    "toon_parser_executed": false,
+    "aws_adapters_tested": false,
+    "jcs_implementation_tested": false
+  }
+}

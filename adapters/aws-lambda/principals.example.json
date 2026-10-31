@@ -1,0 +1,9 @@
+[
+  {
+    "id": "fixture-developer",
+    "token_env": "ANYRS_FIXTURE_TOKEN",
+    "business_id": "demo",
+    "project_id": "notes",
+    "client_id": "local"
+  }
+]

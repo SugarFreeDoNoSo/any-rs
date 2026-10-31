@@ -1,0 +1,8 @@
+{
+  "status": "pass",
+  "runtime_profiles": 2,
+  "storage_mode_profiles": 12,
+  "specified_scenarios": 13,
+  "live_integration_tests_executed": 0,
+  "adapter_implemented": false
+}

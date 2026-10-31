@@ -1,0 +1,19 @@
+test_auth_scope_and_private_operation (__main__.LambdaEvents.test_auth_scope_and_private_operation) ... ok
+test_base64_and_case_insensitive_headers (__main__.LambdaEvents.test_base64_and_case_insensitive_headers) ... ok
+test_idempotency_replay_and_conflict (__main__.LambdaEvents.test_idempotency_replay_and_conflict) ... ok
+test_invalid_base64_and_missing_method (__main__.LambdaEvents.test_invalid_base64_and_missing_method) ... ok
+test_invalid_envelope_recovers (__main__.LambdaEvents.test_invalid_envelope_recovers) ... ok
+test_invalid_inputs_and_header_ambiguity (__main__.LambdaEvents.test_invalid_inputs_and_header_ambiguity) ... ok
+test_partial_batch_and_identity_mismatch (__main__.LambdaEvents.test_partial_batch_and_identity_mismatch) ... ok
+test_refuses_aws_environment (__main__.LambdaEvents.test_refuses_aws_environment) ... ok
+test_revoked_principal_is_durable_rejection (__main__.LambdaEvents.test_revoked_principal_is_durable_rejection) ... ok
+test_tenant_and_principal_idempotency_namespaces (__main__.LambdaEvents.test_tenant_and_principal_idempotency_namespaces) ... ok
+test_transient_failure_rolls_back_and_retries (__main__.LambdaEvents.test_transient_failure_rolls_back_and_retries) ... ok
+test_unreportable_batch_cannot_partially_execute (__main__.LambdaEvents.test_unreportable_batch_cannot_partially_execute) ... ok
+test_untrusted_queue_and_path_mismatch (__main__.LambdaEvents.test_untrusted_queue_and_path_mismatch) ... ok
+test_warm_cold_and_exact_id_dispatch (__main__.LambdaEvents.test_warm_cold_and_exact_id_dispatch) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.142s
+
+OK

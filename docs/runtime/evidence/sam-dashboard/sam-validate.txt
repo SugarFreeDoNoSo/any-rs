@@ -1,0 +1,1 @@
+/workspace/shared/any-rs/adapters/aws-sam/template.yaml is a valid SAM Template

@@ -1,0 +1,70 @@
+   Compiling any-rs-local v0.1.0 (/workspace/shared/any-rs/runtime)
+   Compiling any-rs-lambda v0.1.0 (/workspace/shared/any-rs/adapters/aws-lambda)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.33s
+     Running unittests src/lib.rs (target/debug/deps/any_rs_lambda-01356f76b02f694c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (target/debug/deps/any_rs_lambda_fixture-7f042f58a5a02a6c)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/sam.rs (target/debug/deps/any_rs_sam_fixture-c39241e070ae2b2d)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running unittests src/lib.rs (target/debug/deps/any_rs_local-1ad6cbec2ad75fc5)
+
+running 26 tests
+test domain::tests::commands_are_explicit_and_closed ... ok
+test fsm::tests::ambiguity_is_rejected_even_with_different_guards ... ok
+test fsm::tests::generated_toml_fixture_compiles_to_the_same_model_and_plan ... ok
+test fsm::tests::declared_transition_yields_explicit_actions ... ok
+test fsm::tests::malformed_states_guards_actions_and_terminal_edges_are_rejected ... ok
+test fsm::tests::json_and_toml_are_serializations_of_the_same_neutral_objects ... ok
+test domain::tests::identifiers_are_bounded_and_not_paths ... ok
+test fsm::tests::invalid_input_cannot_produce_mutation_plan_and_reads_are_not_transitions ... ok
+test fsm::tests::set_state_must_match_declared_target_and_labels_are_not_logic ... ok
+test fsm::tests::invalid_creation_state_actions_and_event_collision_are_rejected ... ok
+test fsm::tests::string_length_is_utf8_bytes_not_unicode_characters ... ok
+test fsm::tests::task_creation_is_explicit_but_not_a_transition ... ok
+test fsm::tests::typed_guards_fail_closed ... ok
+test fsm::tests::tasks_have_exactly_three_states_two_edges_and_spanish_labels ... ok
+test fsm::tests::undeclared_edges_and_terminal_events_are_denied ... ok
+test fsm::tests::unknown_fields_actions_and_null_are_not_executable ... ok
+test tasks::tests::input_shape_and_unknown_commands_are_closed ... ok
+test tasks::tests::interpreter_rejects_generic_ir_without_explicit_profile_actions ... ok
+test fsm::tests::toml_rejects_oversized_invalid_unknown_actions_and_targets ... ok
+test domain::tests::dashboard_metadata_matches_registered_runtime_contract ... ok
+test api::tests::states_events_and_labels_come_from_the_installed_machine ... ok
+test dashboard::tests::contracts_and_refs_are_generated_not_copied ... ok
+test dashboard::tests::html_escapes_untrusted_markup_and_has_no_external_scripts ... ok
+test store::tests::targeted_dispatch_preserves_unrelated_queue_and_replays_terminal ... ok
+test store::tests::targeted_dispatch_rejects_identity_mismatch_and_revocation ... ok
+test tasks::tests::lifecycle_denial_cas_and_terminal_replay ... ok
+
+test result: ok. 26 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s
+
+     Running unittests src/main.rs (target/debug/deps/any_rs_local-128e96b4dd8e9fd3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests any_rs_lambda
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+   Doc-tests any_rs_local
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s

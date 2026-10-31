@@ -1,0 +1,59 @@
+# GENERATED from tasks.json; do not edit independently.
+# Read-only serialization parity fixture, not a separate model/version.
+schema_version = 1
+id = "tasks.lifecycle"
+collection = "tasks.task"
+initial_state = "pending"
+states = ["pending", "in_progress", "completed"]
+terminal_states = ["completed"]
+
+[state_labels]
+pending = "Pendiente"
+in_progress = "En progreso"
+completed = "Completada"
+
+[[transitions]]
+from = "pending"
+event = "tasks.start"
+to = "in_progress"
+
+[[transitions.guards]]
+kind = "valid_identifier"
+field = "input.id"
+
+[[transitions.actions]]
+kind = "set_state"
+state = "in_progress"
+
+[[transitions.actions]]
+kind = "emit_event"
+event_name = "tasks.task.started"
+
+[[transitions]]
+from = "in_progress"
+event = "tasks.complete"
+to = "completed"
+
+[[transitions.guards]]
+kind = "valid_identifier"
+field = "input.id"
+
+[[transitions.actions]]
+kind = "set_state"
+state = "completed"
+
+[[transitions.actions]]
+kind = "emit_event"
+event_name = "tasks.task.completed"
+
+[creation]
+event = "tasks.create"
+initial_state = "pending"
+
+[[creation.actions]]
+kind = "create_object"
+object_type = "tasks.task"
+
+[[creation.actions]]
+kind = "emit_event"
+event_name = "tasks.task.created"
