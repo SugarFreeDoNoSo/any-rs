@@ -14,8 +14,15 @@ jobs:
       - name: Install pinned Rust toolchain
         run: rustup toolchain install 1.99.1 --profile minimal --component rustfmt,clippy
       - run: cargo fmt --check
-      - run: cargo test --locked
-      - run: cargo clippy --locked --all-targets -- -D warnings
-      - run: cargo build --locked
+      - run: cargo test --locked --workspace
+      - run: cargo clippy --locked --workspace --all-targets -- -D warnings
+      - run: cargo build --locked --workspace
       - run: python -m pip install -r spec/my-framework-spec-v0.1.0/tools/requirements.txt
       - run: python tests/runtime_http.py
+      - run: python tests/lambda_events.py
+      - run: cargo build --locked -p any-rs-lambda --example runtime_api_probe
+      - run: python tests/lambda_runtime_api.py
+      - run: python tests/dashboard_http.py
+      - run: python tests/sam_fixture.py
+      - run: python tests/fsm_runtime.py
+      - run: python tests/tasks_runtime.py

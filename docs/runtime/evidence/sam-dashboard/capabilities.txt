@@ -1,0 +1,11 @@
+2026-10-31T00:48:47Z
+docker CLI: absent on PATH
+podman CLI: absent on PATH
+/var/run/docker.sock: absent
+/run/docker.sock: absent
+/run/podman/podman.sock: absent
+DOCKER_HOST: not configured
+CONTAINER_HOST: not configured
+SAM CLI: 1.171.0, isolated venv
+sam validate --lint: exit 0
+SAM/Docker execution: NOT RUN (preflight exit 78)

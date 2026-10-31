@@ -24,6 +24,9 @@ class RepositoryValidationTests(unittest.TestCase):
         shutil.copytree(ROOT / "spec", self.root / "spec")
         shutil.copytree(ROOT / "docs", self.root / "docs")
         shutil.copytree(ROOT / "contracts", self.root / "contracts")
+        # New documentation links the executable IR schema; preserve its target
+        # in the temporary repository rather than weakening link validation.
+        shutil.copytree(ROOT / "runtime", self.root / "runtime")
         for name in ("LICENSE", "README.md", "CONTRIBUTING.md"):
             shutil.copy2(ROOT / name, self.root / name)
 

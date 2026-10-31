@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "id": "demo.note.lifecycle",
+  "collection": "demo.note",
+  "initial_state": "absent",
+  "states": ["absent", "created"],
+  "terminal_states": ["created"],
+  "transitions": [
+    {
+      "from": "absent",
+      "event": "demo.note.create",
+      "to": "created",
+      "guards": [
+        {"kind": "valid_identifier", "field": "input.id"},
+        {"kind": "string_length", "field": "input.text", "min": 1, "max": 4096}
+      ],
+      "actions": [
+        {"kind": "create_object", "object_type": "demo.note"},
+        {"kind": "emit_event", "event_name": "demo.note.created"}
+      ]
+    }
+  ]
+}

@@ -286,6 +286,104 @@
           }
         }
       }
+    },
+    "/businesses/{business_id}/projects/{project_id}/clients/{client_id}/dashboard": {
+      "parameters": [
+        {
+          "name": "business_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "project_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Read-only runtime schema dashboard",
+        "responses": {
+          "200": {
+            "description": "Generated authenticated contract view; no live data/metrics",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer credential required"
+          },
+          "403": {
+            "description": "Scope denied"
+          }
+        }
+      }
+    },
+    "/businesses/{business_id}/projects/{project_id}/clients/{client_id}/schema.md": {
+      "parameters": [
+        {
+          "name": "business_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "project_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        },
+        {
+          "name": "client_id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/Identifier"
+          }
+        }
+      ],
+      "get": {
+        "summary": "Generated schema Markdown and Mermaid",
+        "responses": {
+          "200": {
+            "description": "Generated authenticated contract view; no live data/metrics",
+            "content": {
+              "text/markdown": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer credential required"
+          },
+          "403": {
+            "description": "Scope denied"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -2865,5 +2963,14 @@
     "cloud_adapters_implemented": false,
     "authentication": "startup-only static scoped grants",
     "outbox_delivery": false
+  },
+  "x-any-rs-runtime": {
+    "command": "demo.note.create",
+    "collection": "demo.note",
+    "emitted_events": [
+      "demo.note.created"
+    ],
+    "storage_profile": "sqlite-local-fixture",
+    "mutable_state_in_dashboard": false
   }
 }

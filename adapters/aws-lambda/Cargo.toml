@@ -1,0 +1,26 @@
+[package]
+name = "any-rs-lambda"
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-only"
+publish = false
+
+[dependencies]
+any-rs-local = { path = "../../runtime" }
+axum = "0.8"
+tower = { version = "0.5", features = ["util"] }
+http-body-util = "0.1"
+base64 = "0.22"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+lambda_runtime = "1.5"
+aws_lambda_events = { version = "1.2", default-features = false, features = ["apigw", "sqs"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[[bin]]
+name = "any-rs-lambda-fixture"
+path = "src/main.rs"
+
+[[bin]]
+name = "any-rs-sam-fixture"
+path = "src/sam.rs"

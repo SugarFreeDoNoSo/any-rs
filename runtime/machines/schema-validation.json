@@ -1,0 +1,45 @@
+{
+  "schema": "machine.schema.json",
+  "draft": "2020-12",
+  "validator": "python-jsonschema 4.25.1",
+  "schema_self_check": "pass",
+  "fixture_validation": [
+    {
+      "file": "demo-note.json",
+      "result": "pass"
+    },
+    {
+      "file": "tasks.json",
+      "result": "pass"
+    }
+  ],
+  "negative_structural_cases": [
+    {
+      "case": "unknown-root-field",
+      "result": "rejected"
+    },
+    {
+      "case": "unknown-action",
+      "result": "rejected"
+    },
+    {
+      "case": "invalid-guard-field",
+      "result": "rejected"
+    },
+    {
+      "case": "creation-set-state",
+      "result": "rejected"
+    },
+    {
+      "case": "duplicate-create-action",
+      "result": "rejected"
+    },
+    {
+      "case": "required-state-null",
+      "result": "rejected"
+    }
+  ],
+  "optional_creation_null": "accepted, matching serde Option",
+  "semantic_boundary": "Unknown initial-state reference intentionally passes structural schema; CompiledMachine rejects it. Rust remains authoritative.",
+  "runtime_execution_tested_by_this_check": false
+}

@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: any-rs SAM LOCAL fixture only. Do not deploy; persistence and auth are synthetic.
+Globals:
+  Function:
+    Runtime: provided.al2023
+    Architectures: [x86_64]
+    Handler: bootstrap
+    Timeout: 30
+    MemorySize: 256
+    Environment:
+      Variables:
+        ANYRS_SAM_FIXTURE_ONLY: 'true'
+Resources:
+  AnyRsHttpFixture:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ../..
+      Events:
+        Root:
+          Type: HttpApi
+          Properties:
+            Path: /
+            Method: ANY
+            PayloadFormatVersion: '2.0'
+        Proxy:
+          Type: HttpApi
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+            PayloadFormatVersion: '2.0'
+  AnyRsScenarioFixture:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: ../..
+      Environment:
+        Variables:
+          ANYRS_SAM_MODE: scenario

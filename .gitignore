@@ -60,3 +60,7 @@ wrangler-secret*
 # SQLite sidecars for the local runtime.
 *.sqlite3-shm
 *.sqlite3-wal
+
+# Local SAM build outputs, never source artifacts.
+.aws-sam/
+samconfig.toml

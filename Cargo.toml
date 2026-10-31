@@ -1,3 +1,4 @@
 [workspace]
-members = ["runtime"]
+members = ["runtime", "adapters/aws-lambda"]
+default-members = ["runtime"]
 resolver = "2"

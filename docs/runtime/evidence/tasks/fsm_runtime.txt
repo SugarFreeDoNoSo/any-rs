@@ -1,0 +1,9 @@
+test_declared_transition_creates_one_object_and_event (__main__.FsmRuntime.test_declared_transition_creates_one_object_and_event) ... ok
+test_guard_failures_have_no_durable_effects (__main__.FsmRuntime.test_guard_failures_have_no_durable_effects) ... ok
+test_terminal_state_denies_second_create_without_domain_effect (__main__.FsmRuntime.test_terminal_state_denies_second_create_without_domain_effect) ... ok
+test_undeclared_events_are_denied_before_acceptance (__main__.FsmRuntime.test_undeclared_events_are_denied_before_acceptance) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.178s
+
+OK

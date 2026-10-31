@@ -1,6 +1,10 @@
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
+pub const COMMAND_NAME: &str = "demo.note.create";
+pub const OBJECT_TYPE: &str = "demo.note";
+pub const EVENT_NAME: &str = "demo.note.created";
+
 #[derive(Clone, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct Scope {
@@ -43,23 +47,68 @@ pub struct Note {
 }
 impl Command {
     pub fn valid(&self) -> bool {
-        self.name == "demo.note.create"
-            && self.version == 1
-            && identifier(&self.payload.id)
-            && !self.payload.text.is_empty()
-            && self.payload.text.len() <= 4096
+        self.version == 1
+            && crate::fsm::note_machine().is_ok_and(|machine| {
+                machine
+                    .evaluate(machine.initial_state(), &self.name, &self.payload)
+                    .is_ok()
+            })
     }
+}
+// Installation boundary: this slice only supports one immutable collection.
+// Generic IR parsing is not a claim of generic storage/action execution.
+pub fn validate_installed_machine() -> Result<(), &'static str> {
+    use crate::fsm::Action;
+    let machine = crate::fsm::note_machine().map_err(|_| "invalid installed machine IR")?;
+    let ir = machine.ir();
+    let expected_actions = vec![
+        Action::CreateObject {
+            object_type: OBJECT_TYPE.into(),
+        },
+        Action::EmitEvent {
+            event_name: EVENT_NAME.into(),
+        },
+    ];
+    if machine.collection() != OBJECT_TYPE
+        || machine.initial_state() != "absent"
+        || ir.states != ["absent", "created"]
+        || ir.terminal_states != ["created"]
+        || ir.transitions.len() != 1
+    {
+        return Err("unsupported machine installation profile");
+    }
+    let t = &ir.transitions[0];
+    if t.from != "absent"
+        || t.to != "created"
+        || t.event != COMMAND_NAME
+        || t.actions != expected_actions
+    {
+        return Err("unsupported installed transition/action plan");
+    }
+    Ok(())
 }
 pub fn problem(status: u16, code: &str) -> Value {
     json!({"type":format!("urn:any-rs:problem:{code}"), "title":code, "status":status, "code":code, "request_id":uuid::Uuid::new_v4().to_string()})
 }
 // Pure handler: no persistence, network, or calls to other application handlers.
 pub fn note_document(scope: &Scope, note: &Note, commit: &str) -> Value {
-    json!({"scope":scope, "type":"demo.note", "id":note.id, "schema_version":1, "revision":1, "values":{"text":note.text}, "commit_id":commit})
+    json!({"scope":scope, "type":OBJECT_TYPE, "id":note.id, "schema_version":1, "revision":1, "values":{"text":note.text}, "commit_id":commit})
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn dashboard_metadata_matches_registered_runtime_contract() {
+        let api: Value = serde_json::from_str(include_str!("../openapi.json")).unwrap();
+        let metadata = &api["x-any-rs-runtime"];
+        assert_eq!(metadata["command"], COMMAND_NAME);
+        assert_eq!(metadata["collection"], OBJECT_TYPE);
+        assert_eq!(metadata["emitted_events"], json!([EVENT_NAME]));
+        assert_eq!(
+            api["components"]["schemas"]["CommandInput"]["properties"]["name"]["const"],
+            COMMAND_NAME
+        );
+    }
     #[test]
     fn identifiers_are_bounded_and_not_paths() {
         for bad in ["", "../x", "a/b", " a", "é"] {
